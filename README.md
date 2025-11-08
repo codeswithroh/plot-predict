@@ -6,7 +6,9 @@ A decentralized prediction market platform built on Somnia Testnet, enabling use
 
 - **Binary Prediction Markets** - Trade on Yes/No outcomes
 - **Somnia Integration** - Native STT token support
-- **Real-time Activity** - Live bet tracking and market updates
+- **🔴 Real-time Streams** - Live bet tracking with Somnia Streams SDK
+- **⚡ WebSocket Updates** - Instant market updates without polling
+- **🔔 Live Notifications** - Real-time alerts for market events
 - **User Dashboard** - Complete betting history and statistics
 - **Comments System** - Market discussions and community engagement
 - **Admin Controls** - Market creation and resolution tools

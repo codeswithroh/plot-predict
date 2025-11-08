@@ -203,9 +203,15 @@ export default function HomePage() {
                 <div className="container mx-auto">
                     <div className="flex items-center md:justify-between mb-8 max-sm:flex-col max-sm:gap-4">
                         <div className="max-sm:text-center">
-                            <h2 className="text-3xl font-bold text-white mb-2">
-                                Featured Markets
-                            </h2>
+                            <div className="flex items-center space-x-3 mb-2">
+                                <h2 className="text-3xl font-bold text-white">
+                                    Featured Markets
+                                </h2>
+                                <span className="px-3 py-1 bg-red-500/20 text-red-400 border border-red-500/30 rounded-full text-xs font-medium animate-pulse">
+                                    <span className="w-2 h-2 bg-red-500 rounded-full inline-block mr-2 animate-pulse"></span>
+                                    LIVE
+                                </span>
+                            </div>
                             <p className="text-gray-400">
                                 Most popular and trending prediction markets
                             </p>

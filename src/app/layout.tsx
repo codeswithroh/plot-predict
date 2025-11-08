@@ -3,6 +3,8 @@ import { headers } from "next/headers";
 import { Header } from "@/components/shared/header";
 import { TermsGuard } from "@/components/shared/terms-guard";
 import { Web3Provider } from "@/providers/web3-provider";
+import { SomniaStreamsProvider } from "@/providers/somnia-streams-provider";
+import { LiveNotificationsWrapper } from "@/components/shared/live-notifications-wrapper";
 import { Bricolage_Grotesque } from "next/font/google";
 import "./globals.css";
 import { Toaster } from "@/components/ui/sonner";
@@ -70,14 +72,17 @@ export default async function RootLayout({
       >
         <ErrorBoundary>
           <Web3Provider>
-            <div className="min-h-screen flex flex-col bg-gradient-to-r from-[#0A0C14] via-[#1A1F2C] to-[#0A0C14] text-white relative">
-              <TermsGuard>
-                <Header />
-                <main className="flex-1">{children}</main>
-                {pathname === "/" && <Footer />}
-              </TermsGuard>
-            </div>
-            <Toaster theme="dark" position="top-right" />
+            <SomniaStreamsProvider>
+              <LiveNotificationsWrapper />
+              <div className="min-h-screen flex flex-col bg-gradient-to-r from-[#0A0C14] via-[#1A1F2C] to-[#0A0C14] text-white relative">
+                <TermsGuard>
+                  <Header />
+                  <main className="flex-1">{children}</main>
+                  {pathname === "/" && <Footer />}
+                </TermsGuard>
+              </div>
+              <Toaster theme="dark" position="top-right" />
+            </SomniaStreamsProvider>
           </Web3Provider>
         </ErrorBoundary>
       </body>

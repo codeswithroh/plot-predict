@@ -1,6 +1,6 @@
-# Credit Predict - System Architecture Diagrams
+# SomniaPredict - System Architecture Diagrams
 
-This document contains Mermaid diagrams illustrating the system architecture, user flows, and data relationships in Credit Predict.
+This document contains Mermaid diagrams illustrating the system architecture, user flows, and data relationships in SomniaPredict with Somnia Streams SDK integration.
 
 ## 🏗️ System Architecture
 
@@ -9,14 +9,22 @@ graph TB
     subgraph "Frontend (Next.js)"
         UI[User Interface]
         Hooks[React Hooks]
-        Store[Zustand Store]
+        StreamsHook[useMarketStream]
+        LiveComponents[Live Components]
         Components[UI Components]
+    end
+    
+    subgraph "Somnia Streams SDK"
+        StreamsProvider[SomniaStreamsProvider]
+        SDK[Streams SDK]
+        WebSocket[WebSocket Connection]
     end
     
     subgraph "Blockchain Layer"
         Contract[PredictionMarket Contract]
         Wallet[Web3 Wallet]
-        CTC[Creditcoin Testnet]
+        Somnia[Somnia Testnet]
+        Events[Contract Events]
     end
     
     subgraph "Database Layer"
@@ -27,20 +35,31 @@ graph TB
     
     subgraph "External Services"
         WalletConnect[WalletConnect]
-        Explorer[Creditcoin Explorer]
-        RPC[Creditcoin RPC]
+        Explorer[Somnia Explorer]
+        RPC[Somnia RPC]
     end
     
     UI --> Hooks
-    Hooks --> Store
+    UI --> LiveComponents
     Hooks --> Contract
-    Contract --> CTC
+    StreamsHook --> SDK
+    SDK --> WebSocket
+    WebSocket --> Events
+    Events --> Contract
+    Contract --> Somnia
     Wallet --> WalletConnect
     Contract --> RPC
     Hooks --> Supabase
+    StreamsProvider --> SDK
+    LiveComponents --> StreamsHook
     Supabase --> BetActivities
     Supabase --> Comments
     UI --> Explorer
+    
+    style StreamsProvider fill:#9b87f5
+    style SDK fill:#7c3aed
+    style WebSocket fill:#a78bfa
+    style LiveComponents fill:#9b87f5
 ```
 
 ## 🔄 User Betting Flow
@@ -157,6 +176,46 @@ erDiagram
     BET_ACTIVITIES ||--o{ COMMENTS : "market_id"
 ```
 
+## 🔴 Somnia Streams Live Updates Flow
+
+```mermaid
+flowchart TD
+    Start([User Opens App]) --> InitSDK[Initialize Somnia Streams SDK]
+    InitSDK --> CreateClient[Create Public Client]
+    CreateClient --> ConnectWS[Connect WebSocket]
+    
+    ConnectWS --> Subscribe{Subscribe to Events}
+    Subscribe --> BetEvent[BetPlaced Events]
+    Subscribe --> ResolveEvent[MarketResolved Events]
+    Subscribe --> CreateEvent[MarketCreated Events]
+    
+    BetEvent --> OnBet[onBetPlaced Handler]
+    ResolveEvent --> OnResolve[onMarketResolved Handler]
+    CreateEvent --> OnCreate[onMarketCreated Handler]
+    
+    OnBet --> UpdateUI1[Update Activity Feed]
+    OnBet --> UpdateStats[Update Live Stats]
+    OnBet --> RefetchData[Refetch Market Data]
+    
+    OnResolve --> ShowNotif[Show Toast Notification]
+    OnResolve --> UpdateStatus[Update Market Status]
+    
+    OnCreate --> NewMarketNotif[New Market Notification]
+    
+    UpdateUI1 --> Animate[Animate UI Changes]
+    UpdateStats --> FlashBadge[Flash LIVE Badge]
+    
+    Animate --> End([Real-time UI Updated])
+    FlashBadge --> End
+    ShowNotif --> End
+    NewMarketNotif --> End
+    
+    style ConnectWS fill:#9b87f5
+    style OnBet fill:#7c3aed
+    style OnResolve fill:#a78bfa
+    style UpdateUI1 fill:#9b87f5
+```
+
 ## 🔐 Authentication & Authorization Flow
 
 ```mermaid
@@ -171,7 +230,7 @@ flowchart TD
     Sign --> Verify[Verify Signature]
     
     Wallet -->|Yes| CheckNetwork{Correct Network?}
-    CheckNetwork -->|No| Switch[Switch to Creditcoin]
+    CheckNetwork -->|No| Switch[Switch to Somnia Testnet]
     CheckNetwork -->|Yes| Access[Full App Access]
     
     Verify --> Access
@@ -231,7 +290,7 @@ graph TD
     MarketCard --> Card
 ```
 
-## 🔄 Real-time Data Flow
+## 🔄 Real-time Data Flow with Somnia Streams
 
 ```mermaid
 sequenceDiagram
@@ -239,19 +298,32 @@ sequenceDiagram
     participant Frontend1
     participant User2
     participant Frontend2
+    participant StreamsSDK
     participant Contract
     participant Supabase
     
+    Note over Frontend1,Frontend2: Both users subscribe to market streams
+    Frontend1->>StreamsSDK: Subscribe to Market Events
+    Frontend2->>StreamsSDK: Subscribe to Market Events
+    StreamsSDK-->>Frontend1: WebSocket Connected
+    StreamsSDK-->>Frontend2: WebSocket Connected
+    
     User1->>Frontend1: Place Bet
     Frontend1->>Contract: Submit Transaction
+    Contract->>Contract: Emit BetPlaced Event
     Contract-->>Frontend1: Transaction Confirmed
+    
+    Contract->>StreamsSDK: Event Broadcast
+    StreamsSDK-->>Frontend1: Real-time Event
+    StreamsSDK-->>Frontend2: Real-time Event
+    
+    Frontend1->>Frontend1: Update UI Instantly
+    Frontend2->>Frontend2: Update UI Instantly
     
     Frontend1->>Supabase: Record Bet Activity
     Supabase-->>Frontend1: Activity Saved
     
-    Frontend2->>Supabase: Fetch Latest Activity
-    Supabase-->>Frontend2: New Bet Activity
-    Frontend2->>User2: Update Activity Feed
+    Note over Frontend1,Frontend2: No polling needed - instant updates via WebSocket
     
     User2->>Frontend2: Add Comment
     Frontend2->>Supabase: Save Comment
@@ -296,13 +368,15 @@ graph TB
     subgraph "Development"
         Dev[Local Development]
         DevDB[(Local Supabase)]
-        TestNet[Creditcoin Testnet]
+        TestNet[Somnia Testnet]
+        StreamsTest[Streams SDK Testing]
     end
     
     subgraph "Production"
         Vercel[Vercel Hosting]
         ProdDB[(Supabase Production)]
-        MainNet[Creditcoin Mainnet]
+        MainNet[Somnia Mainnet]
+        StreamsProd[Streams SDK Production]
     end
     
     subgraph "CI/CD"
@@ -327,6 +401,57 @@ graph TB
     style MainNet fill:#ff9999
 ```
 
+## 🎯 Somnia Streams Integration Architecture
+
+```mermaid
+graph LR
+    subgraph "React Components"
+        MarketDetail[Market Detail Page]
+        LiveFeed[Live Activity Feed]
+        LiveStats[Live Stats Component]
+    end
+    
+    subgraph "Custom Hooks"
+        useMarketStream[useMarketStream Hook]
+        useLiveNotif[useLiveNotifications Hook]
+    end
+    
+    subgraph "Somnia Streams SDK"
+        Provider[SomniaStreamsProvider]
+        SDK[Streams SDK Instance]
+        Subscription[Event Subscription]
+    end
+    
+    subgraph "Blockchain Events"
+        BetPlaced[BetPlaced Event]
+        MarketResolved[MarketResolved Event]
+        MarketCreated[MarketCreated Event]
+    end
+    
+    MarketDetail --> LiveFeed
+    MarketDetail --> LiveStats
+    LiveFeed --> useMarketStream
+    LiveStats --> useMarketStream
+    useLiveNotif --> useMarketStream
+    
+    useMarketStream --> Provider
+    Provider --> SDK
+    SDK --> Subscription
+    
+    Subscription -.WebSocket.-> BetPlaced
+    Subscription -.WebSocket.-> MarketResolved
+    Subscription -.WebSocket.-> MarketCreated
+    
+    BetPlaced -.Callback.-> useMarketStream
+    MarketResolved -.Callback.-> useMarketStream
+    MarketCreated -.Callback.-> useMarketStream
+    
+    style Provider fill:#9b87f5
+    style SDK fill:#7c3aed
+    style Subscription fill:#a78bfa
+    style useMarketStream fill:#9b87f5
+```
+
 ---
 
-*These diagrams provide a comprehensive overview of the Credit Predict system architecture, data flows, and component relationships. They serve as documentation for developers and stakeholders to understand the platform's technical implementation.*
+*These diagrams provide a comprehensive overview of the SomniaPredict system architecture, real-time data flows with Somnia Streams SDK, and component relationships. They serve as documentation for developers and stakeholders to understand the platform's technical implementation with WebSocket-based live updates.*

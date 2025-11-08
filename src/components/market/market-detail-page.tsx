@@ -7,6 +7,8 @@ import { MarketError } from "@/components/market/market-error";
 import { MarketLoading } from "@/components/market/market-loading";
 import { MarketActivity } from "@/components/market/market-activity";
 import { MyBets } from "@/components/market/my-bets";
+import { LiveActivityFeed } from "@/components/market/live-activity-feed";
+import { LiveStats } from "@/components/market/live-stats";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
@@ -291,6 +293,13 @@ export default function MarketDetailPage() {
               <DollarSign className="h-4 w-4 text-purple-400" />
               <span>{formatCurrency(market.totalPool)} STT volume</span>
             </div>
+
+            {/* Live Stats */}
+            <LiveStats 
+              marketId={marketId}
+              initialVolume={parseFloat(market.totalPool)}
+              initialBets={0}
+            />
           </div>
         </div>
 
@@ -526,6 +535,15 @@ export default function MarketDetailPage() {
 
           {/* Right Column - Sidebar */}
           <div className="space-y-6">
+            {/* Live Activity Feed */}
+            <LiveActivityFeed 
+              marketId={marketId}
+              onNewBet={() => {
+                refetchMarket();
+                refetchPosition();
+              }}
+            />
+
             {/* Market Status */}
             <Card className="bg-gradient-to-br from-[#1A1F2C] to-[#151923] border-gray-800/50 shadow-xl">
               <CardHeader>

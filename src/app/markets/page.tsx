@@ -66,9 +66,15 @@ export default function MarketsPage() {
         <div className="mb-8">
           <div className="flex flex-col md:flex-row md:items-center md:justify-between gap-4 mb-6">
             <div>
-              <h1 className="text-4xl font-bold bg-gradient-to-r from-white via-gray-300 to-white bg-clip-text text-transparent mb-2">
-                Prediction Markets
-              </h1>
+              <div className="flex items-center space-x-3 mb-2">
+                <h1 className="text-4xl font-bold bg-gradient-to-r from-white via-gray-300 to-white bg-clip-text text-transparent">
+                  Prediction Markets
+                </h1>
+                <span className="px-3 py-1 bg-red-500/20 text-red-400 border border-red-500/30 rounded-full text-xs font-medium animate-pulse">
+                  <span className="w-2 h-2 bg-red-500 rounded-full inline-block mr-2 animate-pulse"></span>
+                  LIVE
+                </span>
+              </div>
               <p className="text-gray-400 text-lg">
                 Trade on the outcomes of real-world events with tCTC tokens
               </p>

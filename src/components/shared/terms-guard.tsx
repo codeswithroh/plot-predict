@@ -1,4 +1,4 @@
-"use client";
+﻿"use client";
 
 import { useTermsStore, checkPreviousRegionAcknowledgment } from "@/stores/terms-store";
 import { getUserLocation, isRegionRestricted } from "@/lib/geolocation";

@@ -1,4 +1,4 @@
-"use client";
+﻿"use client";
 
 import { MarketCard } from "@/components/market/market-card";
 import { MarketError } from "@/components/market/market-error";

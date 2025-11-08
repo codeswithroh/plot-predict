@@ -1,4 +1,4 @@
-/* eslint-disable @typescript-eslint/no-explicit-any */
+﻿/* eslint-disable @typescript-eslint/no-explicit-any */
 import { MarketCategory, MarketStatus } from "@/types/market";
 
 export function formatCurrency(value: string | number, currency = "STT"): string {

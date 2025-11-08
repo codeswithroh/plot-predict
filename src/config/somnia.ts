@@ -1,4 +1,4 @@
-// Export Somnia chain definitions for wagmi/viem
+﻿// Export Somnia chain definitions for wagmi/viem
 export const somniaTestnet = {
   id: 50312,
   name: "Somnia Testnet",

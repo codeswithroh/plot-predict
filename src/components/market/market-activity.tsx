@@ -1,4 +1,4 @@
-import React from 'react';
+﻿import React from 'react';
 import { useBetActivity } from '@/hooks/use-bet-activity';
 import { Badge } from '@/components/ui/badge';
 import { Card, CardContent } from '@/components/ui/card';

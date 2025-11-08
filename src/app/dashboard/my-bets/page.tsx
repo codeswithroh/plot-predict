@@ -1,4 +1,4 @@
-"use client";
+﻿"use client";
 
 import { MyBets } from "@/components/market/my-bets";
 import { useAccount } from "wagmi";

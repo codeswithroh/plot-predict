@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+ï»¿import React, { useState, useEffect } from 'react';
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from '@/components/ui/dialog';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
@@ -462,9 +462,9 @@ export const BetDialog: React.FC<BetDialogProps> = ({
               <div className="bg-gradient-to-r from-[#9b87f5]/10 to-[#7c3aed]/10 rounded-lg p-4 border border-[#9b87f5]/20">
                 <h3 className="font-semibold text-sm text-[#9b87f5] mb-2">What's Next?</h3>
                 <ul className="text-xs text-gray-300 space-y-1">
-                  <li>• Your bet is now active on the blockchain</li>
-                  <li>• You'll receive rewards if your prediction is correct</li>
-                  <li>• Check back when the market resolves to claim winnings</li>
+                  <li>ï¿½ Your bet is now active on the blockchain</li>
+                  <li>ï¿½ You'll receive rewards if your prediction is correct</li>
+                  <li>ï¿½ Check back when the market resolves to claim winnings</li>
                 </ul>
               </div>
 
@@ -503,4 +503,5 @@ export const BetDialog: React.FC<BetDialogProps> = ({
     </Dialog>
   );
 };
+
 

@@ -1,4 +1,4 @@
-"use client";
+﻿"use client";
 
 import { BetDialog } from "@/components/market/bet-dialog";
 import { CommentsSection } from "@/components/comments/comments-section";

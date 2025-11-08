@@ -9,7 +9,8 @@
     "lint": "next lint",
     "compile": "hardhat compile",
     "deploy:testnet": "hardhat run scripts/deploy.js --network somnia_testnet",
-    "deploy:mainnet": "hardhat run scripts/deploy.js --network somnia_mainnet"
+    "deploy:mainnet": "hardhat run scripts/deploy.js --network somnia_mainnet",
+    "create:somi": "hardhat run scripts/create-somi-market.js --network somnia_testnet"
   },
   "dependencies": {
     "@hookform/resolvers": "^5.1.1",

@@ -160,6 +160,16 @@ export const usePredictionContractRead = () => {
 
   // Transform contract data to Market type
   const transformContractMarket = (contractMarket: any): Market => {
+    const totalPool = formatEther(contractMarket.totalPool);
+    console.log('🔍 Transform Market:', {
+      id: contractMarket.id.toString(),
+      title: contractMarket.title,
+      totalPoolRaw: contractMarket.totalPool.toString(),
+      totalPoolFormatted: totalPool,
+      totalOptionAShares: formatEther(contractMarket.totalOptionAShares),
+      totalOptionBShares: formatEther(contractMarket.totalOptionBShares),
+    });
+    
     return {
       id: contractMarket.id.toString(),
       title: contractMarket.title,
@@ -177,7 +187,7 @@ export const usePredictionContractRead = () => {
       resolved: contractMarket.resolved,
       totalOptionAShares: formatEther(contractMarket.totalOptionAShares),
       totalOptionBShares: formatEther(contractMarket.totalOptionBShares),
-      totalPool: formatEther(contractMarket.totalPool),
+      totalPool: totalPool,
       imageURI: contractMarket.imageUrl,
     };
   };

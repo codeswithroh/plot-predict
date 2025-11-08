@@ -12,7 +12,8 @@ export function formatCompactCurrency(value: string | number, currency = "STT"):
   if (Number.isNaN(num)) return `0 ${currency}`;
   if (num >= 1_000_000) return `${(num / 1_000_000).toFixed(1)}M ${currency}`;
   if (num >= 1_000) return `${(num / 1_000).toFixed(1)}K ${currency}`;
-  return `${num.toFixed(0)} ${currency}`;
+  if (num >= 1) return `${num.toFixed(0)} ${currency}`;
+  return `${num.toFixed(2)} ${currency}`; // Show decimals for values < 1
 }
 
 // Percentage formatting

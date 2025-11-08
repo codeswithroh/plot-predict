@@ -12,18 +12,34 @@ import CountUp from "react-countup";
 
 export default function HomePage() {
     // Use contract hooks for real data
-    const { activeMarkets, allMarkets, activeMarketsLoading, allMarketsLoading } = usePredictionContractRead();
+    const { activeMarkets, allMarkets, activeMarketsLoading, allMarketsLoading, refetchAllMarkets, refetchActiveMarkets } = usePredictionContractRead();
     
     const marketsLoading = activeMarketsLoading || allMarketsLoading;
     const marketsError = null;
     const featuredMarkets = activeMarkets.slice(0, 3); // Show first 3 as featured
 
-    // No need for useEffect with contract hooks
+    // Auto-refresh markets data every 10 seconds
+    React.useEffect(() => {
+        const interval = setInterval(() => {
+            refetchAllMarkets();
+            refetchActiveMarkets();
+        }, 10000);
+        
+        return () => clearInterval(interval);
+    }, [refetchAllMarkets, refetchActiveMarkets]);
 
     // Calculate platform stats
     const platformStats = React.useMemo(() => {
-        const totalVolume = allMarkets.reduce((sum, market) => sum + parseFloat(market.totalPool || "0"), 0);
+        const totalVolume = allMarkets.reduce((sum, market) => {
+            const poolValue = parseFloat(market.totalPool || "0");
+            return sum + (isNaN(poolValue) ? 0 : poolValue);
+        }, 0);
         const totalUsers = new Set(allMarkets.map(m => m.creator)).size;
+        
+        console.log("📊 Platform Stats:", {
+            totalVolume,
+            markets: allMarkets.map(m => ({ id: m.id, pool: m.totalPool }))
+        });
         
         return {
             totalVolume,
@@ -157,7 +173,7 @@ export default function HomePage() {
                                 <div className="p-2 rounded-lg bg-[#9b87f5]/15">
                                     <Coins className="h-5 w-5 text-[#9b87f5]" />
                                 </div>
-                                <span className="text-[10px] px-2 py-0.5 rounded-full bg-[#9b87f5]/10 text-[#9b87f5] border border-[#9b87f5]/20">tCTC</span>
+                                <span className="text-[10px] px-2 py-0.5 rounded-full bg-[#9b87f5]/10 text-[#9b87f5] border border-[#9b87f5]/20">STT</span>
                             </div>
                             <div className="text-3xl font-bold text-[#9b87f5]">
                                 {formatCompactCurrency(platformStats.totalVolume)}

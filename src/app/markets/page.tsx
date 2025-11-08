@@ -104,7 +104,7 @@ export default function MarketsPage() {
                 </span>
               </div>
               <p className="text-3xl font-bold text-white">
-                {markets.reduce((sum, m) => sum + parseFloat(m.totalPool || "0"), 0).toFixed(0)} tCTC
+                {markets.reduce((sum, m) => sum + parseFloat(m.totalPool || "0"), 0).toFixed(2)} STT
               </p>
               <p className="text-xs text-gray-500 mt-1">
                 All-time trading volume

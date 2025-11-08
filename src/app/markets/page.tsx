@@ -76,7 +76,7 @@ export default function MarketsPage() {
                 </span>
               </div>
               <p className="text-gray-400 text-lg">
-                Trade on the outcomes of real-world events with tCTC tokens
+                Trade on the outcomes of real-world events with STT tokens
               </p>
             </div>
 

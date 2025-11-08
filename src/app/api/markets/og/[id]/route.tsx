@@ -52,7 +52,7 @@ export async function GET(
                 color: 'white',
               }}
             >
-              Credit Predict
+              SomniaPredict
             </div>
           </div>
 
@@ -137,7 +137,7 @@ export async function GET(
             color: 'white',
           }}
         >
-          Credit Predict
+          SomniaPredict
         </div>
       ),
       {

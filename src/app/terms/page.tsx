@@ -137,12 +137,12 @@ const termsSections = [
         <ul className="list-none mt-2">
           <li>
             <Link
-              href="https://creditpredict.xyz"
+              href="https://somniapredict.xyz"
               target="_blank"
               rel="noopener noreferrer"
               className="text-[#9b87f5] hover:text-[#7c3aed] transition-colors duration-150"
             >
-              creditpredict.xyz
+              somniapredict.xyz
             </Link>
           </li>
         </ul>

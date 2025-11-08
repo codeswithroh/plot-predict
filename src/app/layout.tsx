@@ -13,18 +13,18 @@ const bricolage = Bricolage_Grotesque({ subsets: ["latin"] });
 // Global Metadata
 export const metadata = {
   title: {
-    default: "Somnia Predict – Decentralized Prediction Markets",
-    template: "%s | Somnia Predict",
+    default: "SomniaPredict – Decentralized Prediction Markets",
+    template: "%s | SomniaPredict",
   },
   description:
-    "Trade, predict, and win on Somnia Predict. On-chain, transparent prediction markets on Somnia testnet.",
+    "Trade, predict, and win on SomniaPredict. On-chain, transparent prediction markets on Somnia testnet.",
   metadataBase: new URL(process.env.NEXT_PUBLIC_APP_URL || "http://localhost:3000"),
   openGraph: {
-    title: "Somnia Predict – Decentralized Prediction Markets",
+    title: "SomniaPredict – Decentralized Prediction Markets",
     description:
-      "Trade, predict, and win on Somnia Predict. On-chain, transparent, and community-driven.",
+      "Trade, predict, and win on SomniaPredict. On-chain, transparent, and community-driven.",
     url: process.env.NEXT_PUBLIC_APP_URL || "http://localhost:3000",
-    siteName: "Somnia Predict",
+    siteName: "SomniaPredict",
     images: [
       {
         url: "/favicon.ico",
@@ -38,9 +38,9 @@ export const metadata = {
   },
   twitter: {
     card: "summary_large_image",
-    title: "Somnia Predict – Decentralized Prediction Markets",
+    title: "SomniaPredict – Decentralized Prediction Markets",
     description:
-      "Trade, predict, and win on Somnia Predict. On-chain, transparent, and community-driven.",
+      "Trade, predict, and win on SomniaPredict. On-chain, transparent, and community-driven.",
     creator: "@somniapredict",
     images: [],
   },

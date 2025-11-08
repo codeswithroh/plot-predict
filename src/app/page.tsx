@@ -79,9 +79,9 @@ export default function HomePage() {
                     <div className="text-center max-w-4xl mx-auto">
                         {/* Main Heading */}
                         <h1 className="text-4xl md:text-6xl font-bold text-white mb-10">
-                            <span className="inline-block animate-pull-up" style={{ animationDelay: "0ms", animationDuration: "1.5s" }}>Where</span>{" "}
-                            <span className="inline-block animate-pull-up text-[#9b87f5]" style={{ animationDelay: "300ms", animationDuration: "1.5s" }}>Dreams</span>{" "}
-                            <span className="inline-block animate-pull-up" style={{ animationDelay: "600ms", animationDuration: "1.5s" }}>Meet Reality.</span>
+                            <span className="inline-block animate-pull-up" style={{ animationDelay: "0ms", animationDuration: "2s" }}>Where</span>{" "}
+                            <span className="inline-block animate-pull-up text-[#9b87f5]" style={{ animationDelay: "500ms", animationDuration: "2s" }}>Dreams</span>{" "}
+                            <span className="inline-block animate-pull-up" style={{ animationDelay: "1000ms", animationDuration: "2s" }}>Meet Reality.</span>
                         </h1>
 
                         {/* Subheading removed per request */}

@@ -4,8 +4,8 @@ import { useEffect, useRef } from "react";
 
 const learnSections = [
   {
-    id: "what-is-credit-predict",
-    title: "What Is Credit Predict",
+    id: "what-is-somniapredict",
+    title: "What Is SomniaPredict",
     content: (
       <p className="text-gray-300 text-sm leading-relaxed">
         Somnia Predict is a decentralized binary prediction platform built on the
@@ -18,7 +18,7 @@ const learnSections = [
   },
   {
     id: "how-it-works",
-    title: "How Credit Predict Works",
+    title: "How SomniaPredict Works",
     content: (
       <ul className="list-none space-y-2 text-gray-300 text-sm leading-relaxed">
         <li>
@@ -52,7 +52,7 @@ const learnSections = [
   },
   {
     id: "why-use",
-    title: "Why Use Credit Predict",
+    title: "Why Use SomniaPredict",
     content: (
       <ul className="list-none space-y-2 text-gray-300 text-sm leading-relaxed">
         <li>
@@ -79,7 +79,7 @@ const learnSections = [
         </li>
         <li>
           <span className="font-semibold text-gray-100">No House Edge:</span>{" "}
-          Credit Predict is a neutral protocol; it is not your counterparty.
+          SomniaPredict is a neutral protocol; it is not your counterparty.
         </li>
       </ul>
     ),
@@ -298,7 +298,7 @@ const Page = () => {
       {/* Header */}
       <header className="text-center">
         <h1 className="text-2xl sm:text-3xl font-bold tracking-tight">
-          Somnia Predict Learn
+          SomniaPredict Learn
         </h1>
         <p className="text-gray-200 text-sm mt-2">
           Effective Date: October 7, 2025 | Last Updated: October 7, 2025

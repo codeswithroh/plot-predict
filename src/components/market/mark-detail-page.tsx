@@ -1,4 +1,4 @@
-﻿/* eslint-disable @typescript-eslint/no-unused-vars */
+/* eslint-disable @typescript-eslint/no-unused-vars */
 /* eslint-disable @next/next/no-img-element */
 "use client";
 
@@ -183,14 +183,14 @@ export default function MarketDetailPage() {
 
               {/* Badges */}
               <div className="flex flex-wrap items-center gap-2">
-                <Badge className="bg-[#22c55e]/20 text-[#22c55e] border-[#22c55e]/30 font-medium">
+                <Badge className="bg-[#9b87f5]/20 text-[#9b87f5] border-[#9b87f5]/30 font-medium">
                   Category {market.category}
                 </Badge>
                 <Badge
                   variant={actualStatus === MarketStatus.Active ? "default" : "secondary"}
                   className={
                     actualStatus === MarketStatus.Active
-                      ? "bg-green-500/20 text-green-400 border-green-500/30"
+                      ? "bg-purple-500/20 text-purple-400 border-purple-500/30"
                       : actualStatus === MarketStatus.Resolved
                       ? "bg-blue-500/20 text-blue-400 border-blue-500/30"
                       : "bg-orange-500/20 text-orange-400 border-orange-500/30"
@@ -220,7 +220,7 @@ export default function MarketDetailPage() {
                 onClick={() => setIsBookmarked(!isBookmarked)}
                 className="border-0 text-white hover:bg-[#1A1F2C] hover:text-white bg-[#1A1F2C]"
               >
-                <Bookmark className={`h-4 w-4 ${isBookmarked ? "fill-current text-[#22c55e]" : ""}`} />
+                <Bookmark className={`h-4 w-4 ${isBookmarked ? "fill-current text-[#9b87f5]" : ""}`} />
               </Button>
               <Button
                 variant="outline"
@@ -243,11 +243,11 @@ export default function MarketDetailPage() {
           {/* Market Meta */}
           <div className="flex flex-wrap gap-6 text-sm text-gray-400">
             <div className="flex items-center space-x-2">
-              <Users className="h-4 w-4 text-[#22c55e]" />
+              <Users className="h-4 w-4 text-[#9b87f5]" />
               <span>Created by</span>
               <Link
                 href={`/dashboard/${market.creator}`}
-                className="text-[#22c55e] hover:text-[#16a34a] font-medium"
+                className="text-[#9b87f5] hover:text-[#7c3aed] font-medium"
               >
                 {market.creator.slice(0, 6)}...{market.creator.slice(-4)}
               </Link>
@@ -266,7 +266,7 @@ export default function MarketDetailPage() {
             </div>
 
             <div className="flex items-center space-x-2">
-              <Volume2 className="h-4 w-4 text-green-400" />
+              <Volume2 className="h-4 w-4 text-purple-400" />
               <span>{formatCurrency(market.totalPool)} STT volume</span>
             </div>
           </div>
@@ -280,7 +280,7 @@ export default function MarketDetailPage() {
             <Card className="bg-gradient-to-br from-[#1A1F2C] to-[#151923] border-gray-800/50 shadow-xl">
               <CardHeader>
                 <CardTitle className="text-white flex items-center space-x-2">
-                  <TrendingUp className="h-5 w-5 text-[#22c55e]" />
+                  <TrendingUp className="h-5 w-5 text-[#9b87f5]" />
                   <span>Current Prices</span>
                 </CardTitle>
               </CardHeader>
@@ -288,7 +288,7 @@ export default function MarketDetailPage() {
                 {/* Price Progress */}
                 <div className="space-y-3">
                   <div className="flex justify-between text-sm font-medium">
-                    <span className="text-[#22c55e]">
+                    <span className="text-[#9b87f5]">
                       {market.optionA} {optionAPercentage.toFixed(1)}%
                     </span>
                     <span className="text-gray-400">
@@ -318,12 +318,12 @@ export default function MarketDetailPage() {
                 {userPosition && (
                   <div className="bg-gradient-to-r from-[#0A0C14] to-[#1A1F2C]/30 rounded-xl p-4 border border-gray-800/50">
                     <h4 className="text-sm font-semibold text-gray-300 mb-3 flex items-center space-x-2">
-                      <Zap className="h-4 w-4 text-[#22c55e]" />
+                      <Zap className="h-4 w-4 text-[#9b87f5]" />
                       <span>Your Position</span>
                     </h4>
                     <div className="grid grid-cols-3 gap-4 text-sm">
                       <div className="text-center">
-                        <div className="text-[#22c55e] font-bold text-lg">
+                        <div className="text-[#9b87f5] font-bold text-lg">
                           {formatCurrency(userPosition.optionAShares)}
                         </div>
                         <div className="text-gray-500 text-xs">{market.optionA} shares</div>
@@ -368,7 +368,7 @@ export default function MarketDetailPage() {
                     className={`h-20 transform transition-all duration-200 ${
                       isBettingDisabled
                         ? "bg-gray-700/50 text-gray-500 cursor-not-allowed hover:bg-gray-700/50 hover:scale-100 shadow-none"
-                        : "bg-gradient-to-r from-[#22c55e] to-[#16a34a] hover:from-[#16a34a] hover:to-[#15803d] text-white shadow-lg shadow-[#22c55e]/25 hover:shadow-[#22c55e]/40 hover:scale-105"
+                        : "bg-gradient-to-r from-[#9b87f5] to-[#7c3aed] hover:from-[#7c3aed] hover:to-[#6d28d9] text-white shadow-lg shadow-[#9b87f5]/25 hover:shadow-[#9b87f5]/40 hover:scale-105"
                     }`}
                     disabled={!!isBettingDisabled}
                   >
@@ -428,14 +428,14 @@ export default function MarketDetailPage() {
                 <TabsList className="grid w-full grid-cols-2 bg-gradient-to-r from-[#1A1F2C] to-[#151923] border border-gray-800/50 rounded-xl p-1 h-12">
                   <TabsTrigger
                     value="bets"
-                    className="data-[state=active]:bg-gradient-to-r data-[state=active]:from-[#22c55e] data-[state=active]:to-[#16a34a] data-[state=active]:text-white data-[state=active]:shadow-lg data-[state=inactive]:text-gray-400 data-[state=inactive]:hover:text-white transition-all duration-200 rounded-lg h-10 font-medium"
+                    className="data-[state=active]:bg-gradient-to-r data-[state=active]:from-[#9b87f5] data-[state=active]:to-[#7c3aed] data-[state=active]:text-white data-[state=active]:shadow-lg data-[state=inactive]:text-gray-400 data-[state=inactive]:hover:text-white transition-all duration-200 rounded-lg h-10 font-medium"
                   >
                     <Activity className="h-3 w-3 mr-1" />
                     Bets
                   </TabsTrigger>
                   <TabsTrigger
                     value="comments"
-                    className="data-[state=active]:bg-gradient-to-r data-[state=active]:from-[#22c55e] data-[state=active]:to-[#16a34a] data-[state=active]:text-white data-[state=active]:shadow-lg data-[state=inactive]:text-gray-400 data-[state=inactive]:hover:text-white transition-all duration-200 rounded-lg h-10 font-medium"
+                    className="data-[state=active]:bg-gradient-to-r data-[state=active]:from-[#9b87f5] data-[state=active]:to-[#7c3aed] data-[state=active]:text-white data-[state=active]:shadow-lg data-[state=inactive]:text-gray-400 data-[state=inactive]:hover:text-white transition-all duration-200 rounded-lg h-10 font-medium"
                   >
                     <Users className="h-3 w-3 mr-1" />
                     Comments
@@ -470,7 +470,7 @@ export default function MarketDetailPage() {
             <Card className="bg-gradient-to-br from-[#1A1F2C] to-[#151923] border-gray-800/50 shadow-xl">
               <CardHeader>
                 <CardTitle className="flex items-center space-x-2 text-white">
-                  {actualStatus === MarketStatus.Active && <TrendingUp className="h-5 w-5 text-green-400" />}
+                  {actualStatus === MarketStatus.Active && <TrendingUp className="h-5 w-5 text-purple-400" />}
                   {actualStatus === MarketStatus.Paused && <Clock className="h-5 w-5 text-orange-400" />}
                   {actualStatus === MarketStatus.Resolved && <CheckCircle className="h-5 w-5 text-blue-400" />}
                   <span>Market Status</span>
@@ -482,7 +482,7 @@ export default function MarketDetailPage() {
                     variant={actualStatus === MarketStatus.Active ? "default" : "secondary"}
                     className={`w-full justify-center py-3 text-sm font-semibold ${
                       actualStatus === MarketStatus.Active
-                        ? "bg-green-500/20 text-green-400 border-green-500/30"
+                        ? "bg-purple-500/20 text-purple-400 border-purple-500/30"
                         : actualStatus === MarketStatus.Resolved
                         ? "bg-blue-500/20 text-blue-400 border-blue-500/30"
                         : "bg-orange-500/20 text-orange-400 border-orange-500/30"
@@ -520,3 +520,4 @@ export default function MarketDetailPage() {
     </div>
   );
 }
+

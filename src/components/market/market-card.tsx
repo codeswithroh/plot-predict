@@ -1,4 +1,4 @@
-﻿import { Badge } from "@/components/ui/badge";
+import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
 import { Progress } from "@/components/ui/progress";
@@ -84,7 +84,7 @@ export const MarketCard: React.FC<MarketCardProps> = ({
 
   return (
     <Link href={`/markets/${market.id}`} className={`block ${className}`}>
-      <Card className="group bg-gradient-to-br from-[#1A1F2C] to-[#151923] border-gray-800/50 shadow-xl hover:shadow-2xl hover:shadow-[#22c55e]/10 transition-all duration-300 hover:scale-[1.02] hover:border-[#22c55e]/30 overflow-hidden">
+      <Card className="group bg-gradient-to-br from-[#1A1F2C] to-[#151923] border-gray-800/50 shadow-xl hover:shadow-2xl hover:shadow-[#9b87f5]/10 transition-all duration-300 hover:scale-[1.02] hover:border-[#9b87f5]/30 overflow-hidden">
         <CardContent className="p-0">
           {/* Image Section */}
           <div className="relative h-48 overflow-hidden">
@@ -107,7 +107,7 @@ export const MarketCard: React.FC<MarketCardProps> = ({
                 variant={actualStatus === MarketStatus.Active ? "default" : "secondary"}
                 className={
                   actualStatus === MarketStatus.Active
-                    ? "bg-green-500/90 text-white border-0 backdrop-blur-sm"
+                    ? "bg-purple-500/90 text-white border-0 backdrop-blur-sm"
                     : actualStatus === MarketStatus.Resolved
                     ? "bg-blue-500/90 text-white border-0 backdrop-blur-sm"
                     : "bg-orange-500/90 text-white border-0 backdrop-blur-sm"
@@ -130,7 +130,7 @@ export const MarketCard: React.FC<MarketCardProps> = ({
 
             {/* Category Badge */}
             <div className="absolute top-3 right-3">
-              <Badge className="bg-[#22c55e]/20 text-[#22c55e] border-[#22c55e]/30 backdrop-blur-sm text-xs">
+              <Badge className="bg-[#9b87f5]/20 text-[#9b87f5] border-[#9b87f5]/30 backdrop-blur-sm text-xs">
                 Category {market.category}
               </Badge>
             </div>
@@ -139,7 +139,7 @@ export const MarketCard: React.FC<MarketCardProps> = ({
           {/* Content Section */}
           <div className="p-6 space-y-4">
             {/* Title */}
-            <h3 className="text-lg font-bold text-white leading-tight line-clamp-2 group-hover:text-[#22c55e] transition-colors duration-200">
+            <h3 className="text-lg font-bold text-white leading-tight line-clamp-2 group-hover:text-[#9b87f5] transition-colors duration-200">
               {market.title}
             </h3>
 
@@ -151,7 +151,7 @@ export const MarketCard: React.FC<MarketCardProps> = ({
             {/* Options Progress */}
             <div className="space-y-3">
               <div className="flex justify-between text-sm font-medium">
-                <span className="text-[#22c55e] truncate flex-1 mr-2">
+                <span className="text-[#9b87f5] truncate flex-1 mr-2">
                   {market.optionA} {optionAPercentage.toFixed(1)}%
                 </span>
                 <span className="text-gray-400 truncate flex-1 text-right">
@@ -167,7 +167,7 @@ export const MarketCard: React.FC<MarketCardProps> = ({
             {/* Market Stats */}
             <div className="grid grid-cols-2 gap-4 pt-2 border-t border-gray-800/50">
               <div className="flex items-center space-x-2 text-xs text-gray-400">
-                <DollarSign className="h-3 w-3 text-green-400" />
+                <DollarSign className="h-3 w-3 text-purple-400" />
                 <span>{formatCurrency(market.totalPool)} STT</span>
               </div>
               <div className="flex items-center space-x-2 text-xs text-gray-400">
@@ -206,7 +206,7 @@ export const MarketCard: React.FC<MarketCardProps> = ({
 
             {/* Action Button */}
             <Button
-              className="w-full bg-gradient-to-r from-[#22c55e] to-[#16a34a] hover:from-[#16a34a] hover:to-[#15803d] text-white shadow-lg group-hover:shadow-[#22c55e]/25 transition-all duration-200"
+              className="w-full bg-gradient-to-r from-[#9b87f5] to-[#7c3aed] hover:from-[#7c3aed] hover:to-[#6d28d9] text-white shadow-lg group-hover:shadow-[#9b87f5]/25 transition-all duration-200"
               size="sm"
             >
               {actualStatus === MarketStatus.Active ? "Trade Now" : "View Details"}
@@ -217,3 +217,4 @@ export const MarketCard: React.FC<MarketCardProps> = ({
     </Link>
   );
 };
+

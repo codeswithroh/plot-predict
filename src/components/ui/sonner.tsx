@@ -1,4 +1,4 @@
-﻿import { Toaster as Sonner } from "sonner"
+import { Toaster as Sonner } from "sonner"
 
 type ToasterProps = React.ComponentProps<typeof Sonner>
 
@@ -13,7 +13,7 @@ const Toaster = ({ ...props }: ToasterProps) => {
             "group toast group-[.toaster]:bg-gray-800 group-[.toaster]:text-white group-[.toaster]:border-gray-700 group-[.toaster]:shadow-lg",
           description: "group-[.toast]:text-gray-300",
           actionButton:
-            "group-[.toast]:bg-green-600 group-[.toast]:text-white",
+            "group-[.toast]:bg-purple-600 group-[.toast]:text-white",
           cancelButton:
             "group-[.toast]:bg-gray-600 group-[.toast]:text-gray-200",
         },
@@ -24,3 +24,4 @@ const Toaster = ({ ...props }: ToasterProps) => {
 }
 
 export { Toaster }
+

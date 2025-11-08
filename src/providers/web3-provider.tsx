@@ -1,4 +1,4 @@
-﻿"use client";
+"use client";
 import "@rainbow-me/rainbowkit/styles.css";
 import React from "react";
 import { WagmiProvider, http } from "wagmi";
@@ -30,7 +30,7 @@ export function Web3Provider({ children }: { children: React.ReactNode }) {
   return (
     <WagmiProvider config={wagmiConfig}>
       <QueryClientProvider client={queryClient}>
-        <RainbowKitProvider theme={darkTheme({ accentColor: "#16a34a" })}>
+        <RainbowKitProvider theme={darkTheme({ accentColor: "#7c3aed" })}>
           {children}
         </RainbowKitProvider>
       </QueryClientProvider>

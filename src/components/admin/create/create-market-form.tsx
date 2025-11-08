@@ -245,10 +245,10 @@ export function CreateMarketForm({ onSubmit, isLoading: externalLoading = false 
       <div className="flex items-center justify-between mb-8">
         {[1, 2, 3, 4].map((stepNumber) => (
           <div key={stepNumber} className="flex items-center">
-            <div className={`w-8 h-8 rounded-full flex items-center justify-center text-sm font-medium ${stepNumber < step ? "bg-green-500 text-white" : stepNumber === step ? "bg-[#22c55e] text-white" : "bg-gray-700 text-gray-400"}`}>
+            <div className={`w-8 h-8 rounded-full flex items-center justify-center text-sm font-medium ${stepNumber < step ? "bg-purple-500 text-white" : stepNumber === step ? "bg-[#9b87f5] text-white" : "bg-gray-700 text-gray-400"}`}>
               {stepNumber < step ? <Check className="h-4 w-4" /> : stepNumber}
             </div>
-            {stepNumber < 4 && <div className={`w-12 h-0.5 mx-2 ${stepNumber < step ? "bg-green-500" : "bg-gray-700"}`} />}
+            {stepNumber < 4 && <div className={`w-12 h-0.5 mx-2 ${stepNumber < step ? "bg-purple-500" : "bg-gray-700"}`} />}
           </div>
         ))}
       </div>
@@ -266,7 +266,7 @@ export function CreateMarketForm({ onSubmit, isLoading: externalLoading = false 
                 placeholder="Will Bitcoin reach $100,000 by end of 2025?"
                 value={formData.question}
                 onChange={(e) => setFormData((prev) => ({ ...prev, question: e.target.value }))}
-                className={`bg[#0A0C14] border-gray-700 text-white placeholder:text-gray-500 focus:border-[#22c55e] ${errors.question ? "border-red-500" : ""}`}
+                className={`bg[#0A0C14] border-gray-700 text-white placeholder:text-gray-500 focus:border-[#9b87f5] ${errors.question ? "border-red-500" : ""}`}
               />
               {errors.question && <p className="text-sm text-red-400">{errors.question}</p>}
               <p className="text-xs text-gray-400">{formData.question.length}/500 characters</p>
@@ -280,7 +280,7 @@ export function CreateMarketForm({ onSubmit, isLoading: externalLoading = false 
                   placeholder="Yes"
                   value={formData.optionA}
                   onChange={(e) => setFormData((prev) => ({ ...prev, optionA: e.target.value }))}
-                  className={`bg[#0A0C14] border-gray-700 text-white placeholder:text-gray-500 focus:border-[#22c55e] ${errors.optionA ? "border-red-500" : ""}`}
+                  className={`bg[#0A0C14] border-gray-700 text-white placeholder:text-gray-500 focus:border-[#9b87f5] ${errors.optionA ? "border-red-500" : ""}`}
                 />
                 {errors.optionA && <p className="text-sm text-red-400">{errors.optionA}</p>}
               </div>
@@ -291,7 +291,7 @@ export function CreateMarketForm({ onSubmit, isLoading: externalLoading = false 
                   placeholder="No"
                   value={formData.optionB}
                   onChange={(e) => setFormData((prev) => ({ ...prev, optionB: e.target.value }))}
-                  className={`bg[#0A0C14] border-gray-700 text-white placeholder:text-gray-500 focus:border-[#22c55e] ${errors.optionB ? "border-red-500" : ""}`}
+                  className={`bg[#0A0C14] border-gray-700 text-white placeholder:text-gray-500 focus:border-[#9b87f5] ${errors.optionB ? "border-red-500" : ""}`}
                 />
                 {errors.optionB && <p className="text-sm text-red-400">{errors.optionB}</p>}
               </div>
@@ -300,7 +300,7 @@ export function CreateMarketForm({ onSubmit, isLoading: externalLoading = false 
             <div className="space-y-2">
               <Label htmlFor="category" className="text-gray-300">Category *</Label>
               <Select value={formData.category === -1 ? "" : formData.category.toString()} onValueChange={(value: string) => setFormData((prev) => ({ ...prev, category: parseInt(value) }))}>
-                <SelectTrigger className={`bg[#0A0C14] border-gray-700 text-white focus:border-[#22c55e] ${errors.category ? "border-red-500" : ""}`}>
+                <SelectTrigger className={`bg[#0A0C14] border-gray-700 text-white focus:border-[#9b87f5] ${errors.category ? "border-red-500" : ""}`}>
                   <SelectValue placeholder="Select a category" />
                 </SelectTrigger>
                 <SelectContent className="bg-[#1A1F2C] border-gray-700">
@@ -335,9 +335,9 @@ export function CreateMarketForm({ onSubmit, isLoading: externalLoading = false 
                   placeholder="https://example.com/image.jpg or click upload"
                   value={formData.imageURI}
                   onChange={(e) => setFormData((prev) => ({ ...prev, imageURI: e.target.value }))}
-                  className="bg[#0A0C14] border-gray-700 text-white placeholder:text-gray-500 focus:border-[#22c55e]"
+                  className="bg[#0A0C14] border-gray-700 text-white placeholder:text-gray-500 focus:border-[#9b87f5]"
                 />
-                <Button type="button" variant="outline" onClick={handleUploadClick} disabled={isUploadingImage} className="border-gray-700 text-gray-300 hover:bg-[#1A1F2C] hover:border-[#22c55e] min-w-[120px]">
+                <Button type="button" variant="outline" onClick={handleUploadClick} disabled={isUploadingImage} className="border-gray-700 text-gray-300 hover:bg-[#1A1F2C] hover:border-[#9b87f5] min-w-[120px]">
                   {isUploadingImage ? (
                     <>
                       <Loader2 className="h-4 w-4 mr-2 animate-spin" />
@@ -383,7 +383,7 @@ export function CreateMarketForm({ onSubmit, isLoading: externalLoading = false 
                   value={formData.endDate}
                   onChange={(e) => setFormData((prev) => ({ ...prev, endDate: e.target.value }))}
                   min={new Date().toISOString().split("T")[0]}
-                  className={`bg[#0A0C14] border-gray-700 text-white focus:border-[#22c55e] ${errors.endDate ? "border-red-500" : ""}`}
+                  className={`bg[#0A0C14] border-gray-700 text-white focus:border-[#9b87f5] ${errors.endDate ? "border-red-500" : ""}`}
                 />
               </div>
               <div className="space-y-2">
@@ -393,7 +393,7 @@ export function CreateMarketForm({ onSubmit, isLoading: externalLoading = false 
                   type="time"
                   value={formData.endTime}
                   onChange={(e) => setFormData((prev) => ({ ...prev, endTime: e.target.value }))}
-                  className={`bg[#0A0C14] border-gray-700 text-white focus:border-[#22c55e] ${errors.endTime ? "border-red-500" : ""}`}
+                  className={`bg[#0A0C14] border-gray-700 text-white focus:border-[#9b87f5] ${errors.endTime ? "border-red-500" : ""}`}
                 />
               </div>
             </div>
@@ -406,7 +406,7 @@ export function CreateMarketForm({ onSubmit, isLoading: externalLoading = false 
                 placeholder="CoinGecko, Reuters, Official Government Website, etc."
                 value={formData.resolutionSource}
                 onChange={(e) => setFormData((prev) => ({ ...prev, resolutionSource: e.target.value }))}
-                className={`bg[#0A0C14] border-gray-700 text-white placeholder:text-gray-500 focus:border-[#22c55e] ${errors.resolutionSource ? "border-red-500" : ""}`}
+                className={`bg[#0A0C14] border-gray-700 text-white placeholder:text-gray-500 focus:border-[#9b87f5] ${errors.resolutionSource ? "border-red-500" : ""}`}
               />
               {errors.resolutionSource && <p className="text-sm text-red-400">{errors.resolutionSource}</p>}
               <p className="text-xs text-gray-400">Specify the authoritative source that will be used for resolution</p>
@@ -419,7 +419,7 @@ export function CreateMarketForm({ onSubmit, isLoading: externalLoading = false 
                 placeholder="Detailed rules for how this market will be resolved, including edge cases..."
                 value={formData.rules}
                 onChange={(e) => setFormData((prev) => ({ ...prev, rules: e.target.value }))}
-                className="min-h-24 bg[#0A0C14] border-gray-700 text-white placeholder:text-gray-500 focus:border-[#22c55e]"
+                className="min-h-24 bg[#0A0C14] border-gray-700 text-white placeholder:text-gray-500 focus:border-[#9b87f5]"
               />
               <p className="text-xs text-gray-400">Clear resolution criteria help prevent disputes</p>
             </div>
@@ -444,7 +444,7 @@ export function CreateMarketForm({ onSubmit, isLoading: externalLoading = false 
                   placeholder="1"
                   value={formData.minBet}
                   onChange={(e) => setFormData((prev) => ({ ...prev, minBet: e.target.value }))}
-                  className={`bg[#0A0C14] border-gray-700 text-white placeholder:text-gray-500 focus:border-[#22c55e] ${errors.minBet ? "border-red-500" : ""}`}
+                  className={`bg[#0A0C14] border-gray-700 text-white placeholder:text-gray-500 focus:border-[#9b87f5] ${errors.minBet ? "border-red-500" : ""}`}
                 />
                 {errors.minBet && <p className="text-sm text-red-400">{errors.minBet}</p>}
               </div>
@@ -458,7 +458,7 @@ export function CreateMarketForm({ onSubmit, isLoading: externalLoading = false 
                   placeholder="1000"
                   value={formData.maxBet}
                   onChange={(e) => setFormData((prev) => ({ ...prev, maxBet: e.target.value }))}
-                  className={`bg[#0A0C14] border-gray-700 text-white placeholder:text-gray-500 focus:border-[#22c55e] ${errors.maxBet ? "border-red-500" : ""}`}
+                  className={`bg[#0A0C14] border-gray-700 text-white placeholder:text-gray-500 focus:border-[#9b87f5] ${errors.maxBet ? "border-red-500" : ""}`}
                 />
                 {errors.maxBet && <p className="text-sm text-red-400">{errors.maxBet}</p>}
               </div>
@@ -490,13 +490,13 @@ export function CreateMarketForm({ onSubmit, isLoading: externalLoading = false 
               <div>
                 <h4 className="font-semibold text-white">Options</h4>
                 <div className="flex space-x-2">
-                  <Badge variant="outline" className="bg-green-500/20 text-green-400 border-green-500/30">{formData.optionA}</Badge>
+                  <Badge variant="outline" className="bg-purple-500/20 text-purple-400 border-purple-500/30">{formData.optionA}</Badge>
                   <Badge variant="outline" className="bg-red-500/20 text-red-400 border-red-500/30">{formData.optionB}</Badge>
                 </div>
               </div>
               <div>
                 <h4 className="font-semibold text-white">Category</h4>
-                <Badge variant="outline" className="bg-[#22c55e]/20 text-[#22c55e] border-[#22c55e]/30">
+                <Badge variant="outline" className="bg-[#9b87f5]/20 text-[#9b87f5] border-[#9b87f5]/30">
                   {MARKET_CATEGORIES.find((cat) => cat.value === formData.category)?.label}
                 </Badge>
               </div>
@@ -540,9 +540,9 @@ export function CreateMarketForm({ onSubmit, isLoading: externalLoading = false 
         <Button variant="outline" onClick={handleBack} disabled={step === 1 || loading} className="border-gray-700 text-gray-300 hover:bg-[#1A1F2C] hover:text-white">Back</Button>
         <div className="space-x-2">
           {step < 4 ? (
-            <Button onClick={handleNext} disabled={loading} className="bg-gradient-to-r from-[#22c55e] to-[#16a34a] hover:from-[#16a34a] hover:to-[#15803d] text-white">Next</Button>
+            <Button onClick={handleNext} disabled={loading} className="bg-gradient-to-r from-[#9b87f5] to-[#7c3aed] hover:from-[#7c3aed] hover:to-[#6d28d9] text-white">Next</Button>
           ) : (
-            <Button onClick={handleSubmit} disabled={loading || !isConnected} className="bg-gradient-to-r from-[#22c55e] to-[#16a34a] hover:from-[#16a34a] hover:to-[#15803d] text-white">
+            <Button onClick={handleSubmit} disabled={loading || !isConnected} className="bg-gradient-to-r from-[#9b87f5] to-[#7c3aed] hover:from-[#7c3aed] hover:to-[#6d28d9] text-white">
               {loading ? (<><Loader2 className="h-4 w-4 mr-2 animate-spin" />Creating Market...</>) : ("Create Market")}
             </Button>
           )}
@@ -551,5 +551,6 @@ export function CreateMarketForm({ onSubmit, isLoading: externalLoading = false 
     </div>
   );
 }
+
 
 

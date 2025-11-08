@@ -28,8 +28,8 @@ export default function MyBetsPage() {
             {/* Connect Wallet Card */}
             <Card className="bg-gradient-to-br from-[#1A1F2C] to-[#151923] border-gray-800/50 shadow-xl">
               <CardContent className="p-8 text-center">
-                <div className="mx-auto w-16 h-16 bg-gradient-to-r from-[#22c55e]/20 to-[#16a34a]/20 rounded-full flex items-center justify-center mb-6">
-                  <Wallet className="h-8 w-8 text-[#22c55e]" />
+                <div className="mx-auto w-16 h-16 bg-gradient-to-r from-[#9b87f5]/20 to-[#7c3aed]/20 rounded-full flex items-center justify-center mb-6">
+                  <Wallet className="h-8 w-8 text-[#9b87f5]" />
                 </div>
                 <h3 className="text-xl font-semibold text-white mb-3">
                   Connect Your Wallet
@@ -40,7 +40,7 @@ export default function MyBetsPage() {
                 <div className="flex flex-col sm:flex-row gap-4 justify-center">
                   <Button
                     asChild
-                    className="bg-gradient-to-r from-[#22c55e] to-[#16a34a] hover:from-[#16a34a] hover:to-[#15803d] text-white"
+                    className="bg-gradient-to-r from-[#9b87f5] to-[#7c3aed] hover:from-[#7c3aed] hover:to-[#6d28d9] text-white"
                   >
                     <Link href="/markets">
                       Browse Markets
@@ -71,7 +71,7 @@ export default function MyBetsPage() {
           {/* Header */}
           <div className="mb-8">
             <div className="flex items-center space-x-3 mb-4">
-              <BarChart3 className="h-8 w-8 text-[#22c55e]" />
+              <BarChart3 className="h-8 w-8 text-[#9b87f5]" />
               <h1 className="text-4xl font-bold bg-gradient-to-r from-white via-gray-300 to-white bg-clip-text text-transparent">
                 My Betting History
               </h1>

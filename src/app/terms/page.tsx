@@ -1,4 +1,4 @@
-﻿"use client";
+"use client";
 
 import Link from "next/link";
 import { useEffect, useRef } from "react";
@@ -140,7 +140,7 @@ const termsSections = [
               href="https://creditpredict.xyz"
               target="_blank"
               rel="noopener noreferrer"
-              className="text-[#22c55e] hover:text-[#16a34a] transition-colors duration-150"
+              className="text-[#9b87f5] hover:text-[#7c3aed] transition-colors duration-150"
             >
               creditpredict.xyz
             </Link>
@@ -177,7 +177,7 @@ const Page = () => {
               <li key={section.id}>
                 <button
                   onClick={() => scrollToSection(index)}
-                  className="text-sm text-gray-400 hover:text-[#22c55e] transition-colors duration-150 w-full text-left py-1"
+                  className="text-sm text-gray-400 hover:text-[#9b87f5] transition-colors duration-150 w-full text-left py-1"
                 >
                   {index + 1}. {section.title}
                 </button>

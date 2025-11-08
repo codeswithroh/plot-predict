@@ -1,4 +1,4 @@
-﻿"use client";
+"use client";
 import { usePathname } from "next/navigation";
 import Link from "next/link";
 
@@ -42,8 +42,8 @@ export const Footer = () => {
       <div className="max-w-7xl mx-auto flex flex-col items-center gap-4">
         <Link href="/" className="flex items-center gap-2">
           <span className="text-lg sm:text-xl font-bold tracking-tight">
-            <span className="bg-gradient-to-r from-[#34d399] via-[#22c55e] to-[#16a34a] bg-clip-text text-transparent">Credit</span>
-            <span className="text-white"> Predict</span>
+            <span className="bg-gradient-to-r from-[#a78bfa] via-[#9b87f5] to-[#7c3aed] bg-clip-text text-transparent">Somnia</span>
+            <span className="text-white">Predict</span>
           </span>
         </Link>
 
@@ -52,7 +52,7 @@ export const Footer = () => {
             <Link
               key={link.label}
               href={link.href}
-              className="hover:text-[#16a34a] transition-colors duration-200"
+              className="hover:text-[#7c3aed] transition-colors duration-200"
             >
               {link.label}
             </Link>
@@ -62,7 +62,7 @@ export const Footer = () => {
         <div className="h-px w-full max-w-5xl bg-gray-800/60 my-2" />
 
         <div className="w-full flex items-center justify-between text-[11px] sm:text-xs text-gray-500">
-          <span>© {new Date().getFullYear()} Credit Predict</span>
+          <span>© {new Date().getFullYear()} SomniaPredict</span>
           <span className="hidden sm:block">All rights reserved</span>
         </div>
       </div>

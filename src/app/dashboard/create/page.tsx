@@ -116,7 +116,7 @@ export default function CreateMarketPage() {
             <Card className="bg-gradient-to-br from-[#1A1F2C] to-[#151923] border-gray-800/50 shadow-xl">
               <CardHeader>
                 <CardTitle className="text-white flex items-center space-x-2">
-                  <Plus className="h-5 w-5 text-[#22c55e]" />
+                  <Plus className="h-5 w-5 text-[#9b87f5]" />
                   <span>Market Details</span>
                 </CardTitle>
               </CardHeader>
@@ -133,7 +133,7 @@ export default function CreateMarketPage() {
                         placeholder="e.g., Will Bitcoin reach $100,000 by end of 2024?"
                         value={formData.title}
                         onChange={(e) => handleInputChange("title", e.target.value)}
-                        className="bg-gray-800/50 border-gray-700 text-white placeholder-gray-500 focus:border-[#22c55e] focus:ring-[#22c55e]/20"
+                        className="bg-gray-800/50 border-gray-700 text-white placeholder-gray-500 focus:border-[#9b87f5] focus:ring-[#9b87f5]/20"
                         required
                       />
                     </div>
@@ -147,7 +147,7 @@ export default function CreateMarketPage() {
                         placeholder="Provide detailed information about the market conditions and resolution criteria..."
                         value={formData.description}
                         onChange={(e) => handleInputChange("description", e.target.value)}
-                        className="bg-gray-800/50 border-gray-700 text-white placeholder-gray-500 focus:border-[#22c55e] focus:ring-[#22c55e]/20 min-h-[100px]"
+                        className="bg-gray-800/50 border-gray-700 text-white placeholder-gray-500 focus:border-[#9b87f5] focus:ring-[#9b87f5]/20 min-h-[100px]"
                         required
                       />
                     </div>
@@ -163,7 +163,7 @@ export default function CreateMarketPage() {
                           placeholder="https://example.com/image.jpg"
                           value={formData.imageUrl}
                           onChange={(e) => handleInputChange("imageUrl", e.target.value)}
-                          className="pl-10 bg-gray-800/50 border-gray-700 text-white placeholder-gray-500 focus:border-[#22c55e] focus:ring-[#22c55e]/20"
+                          className="pl-10 bg-gray-800/50 border-gray-700 text-white placeholder-gray-500 focus:border-[#9b87f5] focus:ring-[#9b87f5]/20"
                         />
                       </div>
                     </div>
@@ -180,7 +180,7 @@ export default function CreateMarketPage() {
                         placeholder="e.g., Yes"
                         value={formData.optionA}
                         onChange={(e) => handleInputChange("optionA", e.target.value)}
-                        className="bg-gray-800/50 border-gray-700 text-white placeholder-gray-500 focus:border-[#22c55e] focus:ring-[#22c55e]/20"
+                        className="bg-gray-800/50 border-gray-700 text-white placeholder-gray-500 focus:border-[#9b87f5] focus:ring-[#9b87f5]/20"
                         required
                       />
                     </div>
@@ -194,7 +194,7 @@ export default function CreateMarketPage() {
                         placeholder="e.g., No"
                         value={formData.optionB}
                         onChange={(e) => handleInputChange("optionB", e.target.value)}
-                        className="bg-gray-800/50 border-gray-700 text-white placeholder-gray-500 focus:border-[#22c55e] focus:ring-[#22c55e]/20"
+                        className="bg-gray-800/50 border-gray-700 text-white placeholder-gray-500 focus:border-[#9b87f5] focus:ring-[#9b87f5]/20"
                         required
                       />
                     </div>
@@ -206,7 +206,7 @@ export default function CreateMarketPage() {
                       Category *
                     </Label>
                     <Select value={formData.category} onValueChange={(value) => handleInputChange("category", value)}>
-                      <SelectTrigger className="bg-gray-800/50 border-gray-700 text-white focus:border-[#22c55e] focus:ring-[#22c55e]/20">
+                      <SelectTrigger className="bg-gray-800/50 border-gray-700 text-white focus:border-[#9b87f5] focus:ring-[#9b87f5]/20">
                         <SelectValue placeholder="Select a category" />
                       </SelectTrigger>
                       <SelectContent className="bg-gray-800 border-gray-700">
@@ -232,7 +232,7 @@ export default function CreateMarketPage() {
                           type="date"
                           value={formData.endDate}
                           onChange={(e) => handleInputChange("endDate", e.target.value)}
-                          className="pl-10 bg-gray-800/50 border-gray-700 text-white focus:border-[#22c55e] focus:ring-[#22c55e]/20"
+                          className="pl-10 bg-gray-800/50 border-gray-700 text-white focus:border-[#9b87f5] focus:ring-[#9b87f5]/20"
                           required
                         />
                       </div>
@@ -247,7 +247,7 @@ export default function CreateMarketPage() {
                         type="time"
                         value={formData.endTime}
                         onChange={(e) => handleInputChange("endTime", e.target.value)}
-                        className="bg-gray-800/50 border-gray-700 text-white focus:border-[#22c55e] focus:ring-[#22c55e]/20"
+                        className="bg-gray-800/50 border-gray-700 text-white focus:border-[#9b87f5] focus:ring-[#9b87f5]/20"
                         required
                       />
                     </div>
@@ -268,7 +268,7 @@ export default function CreateMarketPage() {
                           min="0.01"
                           value={formData.minBet}
                           onChange={(e) => handleInputChange("minBet", e.target.value)}
-                          className="pl-10 bg-gray-800/50 border-gray-700 text-white focus:border-[#22c55e] focus:ring-[#22c55e]/20"
+                          className="pl-10 bg-gray-800/50 border-gray-700 text-white focus:border-[#9b87f5] focus:ring-[#9b87f5]/20"
                         />
                       </div>
                     </div>
@@ -286,7 +286,7 @@ export default function CreateMarketPage() {
                           min="0.01"
                           value={formData.maxBet}
                           onChange={(e) => handleInputChange("maxBet", e.target.value)}
-                          className="pl-10 bg-gray-800/50 border-gray-700 text-white focus:border-[#22c55e] focus:ring-[#22c55e]/20"
+                          className="pl-10 bg-gray-800/50 border-gray-700 text-white focus:border-[#9b87f5] focus:ring-[#9b87f5]/20"
                         />
                       </div>
                     </div>
@@ -305,7 +305,7 @@ export default function CreateMarketPage() {
                     </Button>
                     <Button
                       type="submit"
-                      className="flex-1 bg-gradient-to-r from-[#22c55e] to-[#16a34a] hover:from-[#16a34a] hover:to-[#15803d] text-white shadow-lg"
+                      className="flex-1 bg-gradient-to-r from-[#9b87f5] to-[#7c3aed] hover:from-[#7c3aed] hover:to-[#6d28d9] text-white shadow-lg"
                       disabled={isLoading}
                     >
                       {isLoading ? (

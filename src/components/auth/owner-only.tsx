@@ -1,4 +1,4 @@
-﻿import React from 'react';
+import React from 'react';
 import { useContractOwner } from '@/hooks/use-contract-owner';
 import { useAccount } from 'wagmi';
 import { Button } from '@/components/ui/button';
@@ -96,10 +96,11 @@ export const OwnerOnly: React.FC<OwnerOnlyProps> = ({
     <div>
       {children}
       {showDebugInfo && (
-        <p className="text-xs text-green-500 mt-1">
-          ✅ Contract Owner: {truncateAddress(userAddress)}
+        <p className="text-xs text-purple-500 mt-1">
+          ? Contract Owner: {truncateAddress(userAddress)}
         </p>
       )}
     </div>
   );
 };
+

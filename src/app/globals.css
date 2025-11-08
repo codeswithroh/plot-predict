@@ -121,6 +121,14 @@
   }
 }
 
+/* Somnia Brand Colors */
+:root {
+  --somnia-primary: #9b87f5;
+  --somnia-primary-dark: #7c3aed;
+  --somnia-primary-darker: #6d28d9;
+  --somnia-accent: #a78bfa;
+}
+
 /* Word pull-up animation */
 @keyframes pull-up {
   0% { opacity: 0; transform: translateY(20px); filter: blur(4px); }

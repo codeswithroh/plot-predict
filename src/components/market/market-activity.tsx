@@ -1,4 +1,4 @@
-﻿import React from 'react';
+import React from 'react';
 import { useBetActivity } from '@/hooks/use-bet-activity';
 import { Badge } from '@/components/ui/badge';
 import { Card, CardContent } from '@/components/ui/card';
@@ -23,7 +23,7 @@ export const MarketActivity: React.FC<MarketActivityProps> = ({
   if (isLoading) {
     return (
       <div className="flex items-center justify-center py-8">
-        <Loader2 className="h-6 w-6 animate-spin text-[#22c55e]" />
+        <Loader2 className="h-6 w-6 animate-spin text-[#9b87f5]" />
         <span className="ml-2 text-gray-400">Loading activity...</span>
       </div>
     );
@@ -80,7 +80,7 @@ export const MarketActivity: React.FC<MarketActivityProps> = ({
                 <div className="flex items-center space-x-3">
                   {/* Option Icon */}
                   <div className={`p-2 rounded-lg ${activity.option === 0
-                    ? 'bg-[#22c55e]/20 text-[#22c55e]'
+                    ? 'bg-[#9b87f5]/20 text-[#9b87f5]'
                     : 'bg-gray-600/20 text-gray-400'
                     }`}>
                     {activity.option === 0 ? (
@@ -97,12 +97,12 @@ export const MarketActivity: React.FC<MarketActivityProps> = ({
                         {formatAddress(activity.user_address)}
                       </span>
                       <span className="text-gray-400 text-sm">bet</span>
-                      <span className="text-[#22c55e] font-bold">
+                      <span className="text-[#9b87f5] font-bold">
                         {activity.amount} STT
                       </span>
                       <span className="text-gray-400 text-sm">on</span>
                       <Badge className={`text-xs ${activity.option === 0
-                        ? 'bg-[#22c55e]/20 text-[#22c55e] border-[#22c55e]/30'
+                        ? 'bg-[#9b87f5]/20 text-[#9b87f5] border-[#9b87f5]/30'
                         : 'bg-gray-600/20 text-gray-300 border-gray-600/30'
                         }`}>
                         {activity.option === 0 ? optionA : optionB}

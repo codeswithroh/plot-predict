@@ -1,4 +1,4 @@
-﻿import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect } from 'react';
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from '@/components/ui/dialog';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
@@ -118,7 +118,7 @@ export const BetDialog: React.FC<BetDialogProps> = ({
 
     try {
       setIsSubmitting(true);
-      console.log('🎯 Placing bet:', {
+      console.log('?? Placing bet:', {
         marketId,
         option: optionIndex,
         amount: betAmount
@@ -138,7 +138,7 @@ export const BetDialog: React.FC<BetDialogProps> = ({
       setBetAmount('');
       
     } catch (error: any) {
-      console.error('❌ Bet failed:', error);
+      console.error('? Bet failed:', error);
       // Error is already handled in the hook
     } finally {
       setIsSubmitting(false);
@@ -185,7 +185,7 @@ export const BetDialog: React.FC<BetDialogProps> = ({
       <DialogContent className="bg-gradient-to-br from-[#1A1F2C] to-[#151923] border-gray-800/50 text-white max-w-md">
         <DialogHeader>
           <DialogTitle className="text-xl font-bold flex items-center space-x-2">
-            <TrendingUp className="h-5 w-5 text-[#22c55e]" />
+            <TrendingUp className="h-5 w-5 text-[#9b87f5]" />
             <span>Place Bet</span>
           </DialogTitle>
         </DialogHeader>
@@ -202,7 +202,7 @@ export const BetDialog: React.FC<BetDialogProps> = ({
             <h3 className="font-semibold text-sm text-gray-300">Your Prediction</h3>
             <Badge className={`${
               selectedSide === 'optionA' 
-                ? 'bg-[#22c55e]/20 text-[#22c55e] border-[#22c55e]/30' 
+                ? 'bg-[#9b87f5]/20 text-[#9b87f5] border-[#9b87f5]/30' 
                 : 'bg-gray-600/20 text-gray-300 border-gray-600/30'
             } font-medium`}>
               {selectedOption}
@@ -225,7 +225,7 @@ export const BetDialog: React.FC<BetDialogProps> = ({
                   placeholder={market ? `${market.minBet} - ${market.maxBet}` : "0.00"}
                   value={betAmount}
                   onChange={(e) => setBetAmount(e.target.value)}
-                  className={`bg-gray-800/50 border-gray-700 text-white placeholder-gray-500 focus:border-[#22c55e] focus:ring-[#22c55e]/20 ${
+                  className={`bg-gray-800/50 border-gray-700 text-white placeholder-gray-500 focus:border-[#9b87f5] focus:ring-[#9b87f5]/20 ${
                     !betValidation.isValid ? 'border-red-500/50 focus:border-red-500' : ''
                   }`}
                   disabled={isSubmitting || isLoading}
@@ -303,8 +303,8 @@ export const BetDialog: React.FC<BetDialogProps> = ({
                     </>
                   ) : isConfirmed ? (
                     <>
-                      <CheckCircle className="h-4 w-4 text-green-400" />
-                      <p className="text-green-400 text-sm font-medium">Transaction Confirmed!</p>
+                      <CheckCircle className="h-4 w-4 text-purple-400" />
+                      <p className="text-purple-400 text-sm font-medium">Transaction Confirmed!</p>
                     </>
                   ) : (
                     <>
@@ -332,7 +332,7 @@ export const BetDialog: React.FC<BetDialogProps> = ({
               </Button>
               <Button
                 type="submit"
-                className="flex-1 bg-gradient-to-r from-[#22c55e] to-[#16a34a] hover:from-[#16a34a] hover:to-[#15803d] text-white shadow-lg"
+                className="flex-1 bg-gradient-to-r from-[#9b87f5] to-[#7c3aed] hover:from-[#7c3aed] hover:to-[#6d28d9] text-white shadow-lg"
                 disabled={!isValidAmount || hasInsufficientBalance || !betValidation.isValid || isSubmitting || isLoading || isConfirming || !address}
               >
                 {isSubmitting || isLoading || isConfirming ? (
@@ -351,9 +351,9 @@ export const BetDialog: React.FC<BetDialogProps> = ({
 
           {/* Success Message - Only show if not showing success modal */}
           {isSuccess && !showSuccess && (
-            <div className="bg-green-500/10 rounded-lg p-3 border border-green-500/20">
-              <p className="text-green-400 text-sm font-medium">
-                ✅ Bet placed successfully!
+            <div className="bg-purple-500/10 rounded-lg p-3 border border-purple-500/20">
+              <p className="text-purple-400 text-sm font-medium">
+                ? Bet placed successfully!
               </p>
             </div>
           )}
@@ -369,7 +369,7 @@ export const BetDialog: React.FC<BetDialogProps> = ({
       }}>
         <DialogContent className="bg-gradient-to-br from-[#1A1F2C] to-[#151923] border-gray-800/50 text-white max-w-md">
           <DialogHeader>
-            <DialogTitle className="text-xl font-bold flex items-center space-x-2 text-green-400">
+            <DialogTitle className="text-xl font-bold flex items-center space-x-2 text-purple-400">
               <CheckCircle className="h-6 w-6" />
               <span>Bet Placed Successfully!</span>
             </DialogTitle>
@@ -379,8 +379,8 @@ export const BetDialog: React.FC<BetDialogProps> = ({
             <div className="space-y-6">
               {/* Success Animation */}
               <div className="text-center py-4">
-                <div className="mx-auto w-16 h-16 bg-green-500/20 rounded-full flex items-center justify-center mb-4 animate-pulse">
-                  <CheckCircle className="h-8 w-8 text-green-400" />
+                <div className="mx-auto w-16 h-16 bg-purple-500/20 rounded-full flex items-center justify-center mb-4 animate-pulse">
+                  <CheckCircle className="h-8 w-8 text-purple-400" />
                 </div>
                 <p className="text-gray-300 text-sm">
                   Your bet has been successfully placed on the blockchain!
@@ -400,7 +400,7 @@ export const BetDialog: React.FC<BetDialogProps> = ({
                 
                 <div className="flex justify-between items-center">
                   <span className="text-gray-400 text-sm">Your Prediction:</span>
-                  <Badge className="bg-[#22c55e]/20 text-[#22c55e] border-[#22c55e]/30 text-xs">
+                  <Badge className="bg-[#9b87f5]/20 text-[#9b87f5] border-[#9b87f5]/30 text-xs">
                     {successData.option}
                   </Badge>
                 </div>
@@ -412,7 +412,7 @@ export const BetDialog: React.FC<BetDialogProps> = ({
                 
                 <div className="flex justify-between items-center">
                   <span className="text-gray-400 text-sm">Shares Received:</span>
-                  <span className="text-[#22c55e] font-bold">{successData.shares}</span>
+                  <span className="text-[#9b87f5] font-bold">{successData.shares}</span>
                 </div>
               </div>
 
@@ -459,12 +459,12 @@ export const BetDialog: React.FC<BetDialogProps> = ({
               </div>
 
               {/* Next Steps */}
-              <div className="bg-gradient-to-r from-[#22c55e]/10 to-[#16a34a]/10 rounded-lg p-4 border border-[#22c55e]/20">
-                <h3 className="font-semibold text-sm text-[#22c55e] mb-2">What's Next?</h3>
+              <div className="bg-gradient-to-r from-[#9b87f5]/10 to-[#7c3aed]/10 rounded-lg p-4 border border-[#9b87f5]/20">
+                <h3 className="font-semibold text-sm text-[#9b87f5] mb-2">What's Next?</h3>
                 <ul className="text-xs text-gray-300 space-y-1">
-                  <li>• Your bet is now active on the blockchain</li>
-                  <li>• You'll receive rewards if your prediction is correct</li>
-                  <li>• Check back when the market resolves to claim winnings</li>
+                  <li>� Your bet is now active on the blockchain</li>
+                  <li>� You'll receive rewards if your prediction is correct</li>
+                  <li>� Check back when the market resolves to claim winnings</li>
                 </ul>
               </div>
 
@@ -476,7 +476,7 @@ export const BetDialog: React.FC<BetDialogProps> = ({
                     setSuccessData(null);
                     // Keep bet dialog open for more trading
                   }}
-                  className="flex-1 bg-gradient-to-r from-[#22c55e] to-[#16a34a] hover:from-[#16a34a] hover:to-[#15803d] text-white"
+                  className="flex-1 bg-gradient-to-r from-[#9b87f5] to-[#7c3aed] hover:from-[#7c3aed] hover:to-[#6d28d9] text-white"
                 >
                   Continue Trading
                 </Button>
@@ -503,3 +503,4 @@ export const BetDialog: React.FC<BetDialogProps> = ({
     </Dialog>
   );
 };
+

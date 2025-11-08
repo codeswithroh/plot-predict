@@ -1,4 +1,4 @@
-﻿"use client";
+"use client";
 
 import { useTermsStore, checkPreviousRegionAcknowledgment } from "@/stores/terms-store";
 import { getUserLocation, isRegionRestricted } from "@/lib/geolocation";
@@ -80,15 +80,15 @@ export function TermsGuard({ children }: TermsGuardProps) {
     return (
       <div className="min-h-screen flex items-center justify-center">
         <div className="relative w-16 h-16">
-          <div className="absolute inset-0 rounded-full bg-gradient-to-tr from-[#22c55e] to-[#16a34a] blur-md opacity-70"></div>
+          <div className="absolute inset-0 rounded-full bg-gradient-to-tr from-[#9b87f5] to-[#7c3aed] blur-md opacity-70"></div>
           <div className="absolute inset-0 rounded-full bg-[#0A0C14]"></div>
           <div className="absolute inset-0 rounded-full border-2 border-transparent" style={{
-            backgroundImage: 'conic-gradient(from 0deg, #22c55e, #16a34a, #22c55e)',
+            backgroundImage: 'conic-gradient(from 0deg, #9b87f5, #7c3aed, #9b87f5)',
             WebkitMask: 'radial-gradient(farthest-side, #0000 calc(100% - 4px), #000 0)'
           }} />
           <div className="absolute inset-0 animate-spin" style={{animationDuration: '1200ms'}}>
             <div className="absolute inset-0 rounded-full border-2 border-transparent" style={{
-              backgroundImage: 'conic-gradient(from 90deg, transparent 0%, #22c55e 30%, transparent 60%)',
+              backgroundImage: 'conic-gradient(from 90deg, transparent 0%, #9b87f5 30%, transparent 60%)',
               WebkitMask: 'radial-gradient(farthest-side, #0000 calc(100% - 4px), #000 0)'
             }} />
           </div>

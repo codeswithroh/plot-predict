@@ -1,4 +1,4 @@
-﻿/* eslint-disable @typescript-eslint/no-unused-vars */
+/* eslint-disable @typescript-eslint/no-unused-vars */
 "use client";
 
 import { MarketCard } from "@/components/market/market-card";
@@ -33,7 +33,7 @@ export default function HomePage() {
         };
     }, [allMarkets, activeMarkets]);
 
-    console.log("🏯 HomePage state (using contract hooks):", {
+    console.log("?? HomePage state (using contract hooks):", {
         marketsLoading,
         marketsError,
         activeMarketsCount: activeMarkets.length,
@@ -63,9 +63,9 @@ export default function HomePage() {
                     <div className="text-center max-w-4xl mx-auto">
                         {/* Main Heading */}
                         <h1 className="text-4xl md:text-6xl font-bold text-white mb-10">
-                            <span className="inline-block animate-pull-up" style={{ animationDelay: "0ms" }}>Predict.</span>{" "}
-                            <span className="inline-block animate-pull-up text-[#22c55e]" style={{ animationDelay: "120ms" }}>Win.</span>{" "}
-                            <span className="inline-block animate-pull-up" style={{ animationDelay: "240ms" }}>Repeat.</span>
+                            <span className="inline-block animate-pull-up" style={{ animationDelay: "0ms", animationDuration: "1.5s" }}>Where</span>{" "}
+                            <span className="inline-block animate-pull-up text-[#9b87f5]" style={{ animationDelay: "300ms", animationDuration: "1.5s" }}>Dreams</span>{" "}
+                            <span className="inline-block animate-pull-up" style={{ animationDelay: "600ms", animationDuration: "1.5s" }}>Meet Reality.</span>
                         </h1>
 
                         {/* Subheading removed per request */}
@@ -76,17 +76,17 @@ export default function HomePage() {
                                 asChild
                                 size="lg"
                                 style={{
-                                    backgroundColor: "#22c55e",
+                                    backgroundColor: "#9b87f5",
                                     color: "white",
                                     fontSize: "16px",
                                     height: "fit-content",
                                     padding: "12px 32px",
                                 }}
                                 onMouseEnter={(e) => {
-                                    e.currentTarget.style.backgroundColor = "#16a34a";
+                                    e.currentTarget.style.backgroundColor = "#7c3aed";
                                 }}
                                 onMouseLeave={(e) => {
-                                    e.currentTarget.style.backgroundColor = "#22c55e";
+                                    e.currentTarget.style.backgroundColor = "#9b87f5";
                                 }}
                             >
                                 <Link href="/markets">
@@ -96,7 +96,7 @@ export default function HomePage() {
                             </Button>
 
                             <button
-                                className="border border-[#22c55e] text-[#22c55e] hover:bg-[#22c55e] hover:text-white px-8 py-3 rounded-lg font-semibold transition-all duration-200 max-sm:w-[60%]"
+                                className="border border-[#9b87f5] text-[#9b87f5] hover:bg-[#9b87f5] hover:text-white px-8 py-3 rounded-lg font-semibold transition-all duration-200 max-sm:w-[60%]"
                                 onClick={() =>
                                     window.scrollTo({
                                         top: window.innerHeight,
@@ -111,9 +111,9 @@ export default function HomePage() {
                 </div>
 
                 {/* Animated Background Elements */}
-                <div className="absolute top-10 left-10 w-20 h-20 bg-[#22c55e]/10 rounded-full blur-xl animate-pulse"></div>
-                <div className="absolute bottom-10 right-10 w-32 h-32 bg-[#16a34a]/10 rounded-full blur-xl animate-pulse delay-1000"></div>
-                <div className="absolute top-1/2 left-1/4 w-16 h-16 bg-[#22c55e]/5 rounded-full blur-lg animate-bounce delay-500"></div>
+                <div className="absolute top-10 left-10 w-20 h-20 bg-[#9b87f5]/10 rounded-full blur-xl animate-pulse"></div>
+                <div className="absolute bottom-10 right-10 w-32 h-32 bg-[#7c3aed]/10 rounded-full blur-xl animate-pulse delay-1000"></div>
+                <div className="absolute top-1/2 left-1/4 w-16 h-16 bg-[#9b87f5]/5 rounded-full blur-lg animate-bounce delay-500"></div>
 
                 {/* Bottom Gradient Fade */}
                 <div className="absolute bottom-0 left-0 right-0 h-20 bg-gradient-to-t from-[#0A0C14] to-transparent"></div>
@@ -124,12 +124,12 @@ export default function HomePage() {
                 <div className="container mx-auto">
                     <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6 max-w-6xl mx-auto">
                         {/* Total Markets */}
-                        <div className="bg-[#1A1F2C] rounded-xl p-6 shadow-lg border border-gray-800/60 hover:border-[#22c55e]/30 transition-colors">
+                        <div className="bg-[#1A1F2C] rounded-xl p-6 shadow-lg border border-gray-800/60 hover:border-[#9b87f5]/30 transition-colors">
                             <div className="flex items-start justify-between mb-4">
-                                <div className="p-2 rounded-lg bg-[#22c55e]/15">
-                                    <BarChart3 className="h-5 w-5 text-[#22c55e]" />
+                                <div className="p-2 rounded-lg bg-[#9b87f5]/15">
+                                    <BarChart3 className="h-5 w-5 text-[#9b87f5]" />
                                 </div>
-                                <span className="text-[10px] px-2 py-0.5 rounded-full bg-[#22c55e]/10 text-[#22c55e] border border-[#22c55e]/20">live</span>
+                                <span className="text-[10px] px-2 py-0.5 rounded-full bg-[#9b87f5]/10 text-[#9b87f5] border border-[#9b87f5]/20">live</span>
                             </div>
                             <div className="text-3xl font-bold text-white">
                                 <CountUp end={platformStats.totalMarkets} />
@@ -138,12 +138,12 @@ export default function HomePage() {
                         </div>
 
                         {/* Active Now */}
-                        <div className="bg-[#1A1F2C] rounded-xl p-6 shadow-lg border border-gray-800/60 hover:border-[#22c55e]/30 transition-colors">
+                        <div className="bg-[#1A1F2C] rounded-xl p-6 shadow-lg border border-gray-800/60 hover:border-[#9b87f5]/30 transition-colors">
                             <div className="flex items-start justify-between mb-4">
-                                <div className="p-2 rounded-lg bg-[#22c55e]/15">
-                                    <Activity className="h-5 w-5 text-[#22c55e]" />
+                                <div className="p-2 rounded-lg bg-[#9b87f5]/15">
+                                    <Activity className="h-5 w-5 text-[#9b87f5]" />
                                 </div>
-                                <span className="text-[10px] px-2 py-0.5 rounded-full bg-[#22c55e]/10 text-[#22c55e] border border-[#22c55e]/20">now</span>
+                                <span className="text-[10px] px-2 py-0.5 rounded-full bg-[#9b87f5]/10 text-[#9b87f5] border border-[#9b87f5]/20">now</span>
                             </div>
                             <div className="text-3xl font-bold text-white">
                                 <CountUp end={platformStats.activeMarkets} />
@@ -152,26 +152,26 @@ export default function HomePage() {
                         </div>
 
                         {/* tCTC Volume */}
-                        <div className="bg-[#1A1F2C] rounded-xl p-6 shadow-lg border border-gray-800/60 hover:border-[#22c55e]/30 transition-colors">
+                        <div className="bg-[#1A1F2C] rounded-xl p-6 shadow-lg border border-gray-800/60 hover:border-[#9b87f5]/30 transition-colors">
                             <div className="flex items-start justify-between mb-4">
-                                <div className="p-2 rounded-lg bg-[#22c55e]/15">
-                                    <Coins className="h-5 w-5 text-[#22c55e]" />
+                                <div className="p-2 rounded-lg bg-[#9b87f5]/15">
+                                    <Coins className="h-5 w-5 text-[#9b87f5]" />
                                 </div>
-                                <span className="text-[10px] px-2 py-0.5 rounded-full bg-[#22c55e]/10 text-[#22c55e] border border-[#22c55e]/20">tCTC</span>
+                                <span className="text-[10px] px-2 py-0.5 rounded-full bg-[#9b87f5]/10 text-[#9b87f5] border border-[#9b87f5]/20">tCTC</span>
                             </div>
-                            <div className="text-3xl font-bold text-[#22c55e]">
+                            <div className="text-3xl font-bold text-[#9b87f5]">
                                 {formatCompactCurrency(platformStats.totalVolume)}
                             </div>
                             <div className="text-sm text-gray-400 mt-1">Total Volume</div>
                         </div>
 
                         {/* Trades */}
-                        <div className="bg-[#1A1F2C] rounded-xl p-6 shadow-lg border border-gray-800/60 hover:border-[#22c55e]/30 transition-colors">
+                        <div className="bg-[#1A1F2C] rounded-xl p-6 shadow-lg border border-gray-800/60 hover:border-[#9b87f5]/30 transition-colors">
                             <div className="flex items-start justify-between mb-4">
-                                <div className="p-2 rounded-lg bg-[#22c55e]/15">
-                                    <Users className="h-5 w-5 text-[#22c55e]" />
+                                <div className="p-2 rounded-lg bg-[#9b87f5]/15">
+                                    <Users className="h-5 w-5 text-[#9b87f5]" />
                                 </div>
-                                <span className="text-[10px] px-2 py-0.5 rounded-full bg-[#22c55e]/10 text-[#22c55e] border border-[#22c55e]/20">all-time</span>
+                                <span className="text-[10px] px-2 py-0.5 rounded-full bg-[#9b87f5]/10 text-[#9b87f5] border border-[#9b87f5]/20">all-time</span>
                             </div>
                             <div className="text-3xl font-bold text-white">
                                 <CountUp end={platformStats.totalUsers} suffix="+" />
@@ -198,17 +198,17 @@ export default function HomePage() {
                             asChild
                             variant="outline"
                             style={{
-                                borderColor: "#22c55e",
-                                color: "#22c55e",
+                                borderColor: "#9b87f5",
+                                color: "#9b87f5",
                                 backgroundColor: "transparent",
                             }}
                             onMouseEnter={(e) => {
-                                e.currentTarget.style.backgroundColor = "#22c55e";
+                                e.currentTarget.style.backgroundColor = "#9b87f5";
                                 e.currentTarget.style.color = "white";
                             }}
                             onMouseLeave={(e) => {
                                 e.currentTarget.style.backgroundColor = "transparent";
-                                e.currentTarget.style.color = "#22c55e";
+                                e.currentTarget.style.color = "#9b87f5";
                             }}
                         >
                             <Link href="/markets">View All Markets</Link>
@@ -238,7 +238,7 @@ export default function HomePage() {
                             <Button
                                 onClick={() => window.location.reload()}
                                 variant="outline"
-                                className="mt-4 border-[#22c55e] text-[#22c55e] hover:bg-[#22c55e] hover:text-white"
+                                className="mt-4 border-[#9b87f5] text-[#9b87f5] hover:bg-[#9b87f5] hover:text-white"
                             >
                                 Retry
                             </Button>

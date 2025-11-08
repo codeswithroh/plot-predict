@@ -1,4 +1,4 @@
-﻿/* eslint-disable @typescript-eslint/no-explicit-any */
+/* eslint-disable @typescript-eslint/no-explicit-any */
 import { MarketCategory, MarketStatus } from "@/types/market";
 
 export function formatCurrency(value: string | number, currency = "STT"): string {
@@ -21,7 +21,7 @@ export function formatPercentage(value: number, decimals = 1): string {
   return `${value.toFixed(decimals)}%`;
 }
 
-// Price formatting for markets (0-1 range to 0-100¢)
+// Price formatting for markets (0-1 range to 0-100 cents)
 export function formatPrice(price: string | number): string {
   const num = typeof price === "string" ? parseFloat(price) : price;
   if (isNaN(num)) return "0¢";
@@ -77,7 +77,7 @@ export function formatTimeUntil(timestamp: number): string {
 export function getMarketStatusColor(status: MarketStatus): string {
   switch (status) {
     case MarketStatus.Active:
-      return "text-green-600";
+      return "text-purple-600";
     case MarketStatus.Paused:
       return "text-yellow-600";
     case MarketStatus.Resolved:
@@ -98,7 +98,7 @@ export function getCategoryColor(category: MarketCategory): string {
     case MarketCategory.Entertainment:
       return "bg-purple-100 text-purple-800 border-purple-200";
     case MarketCategory.Technology:
-      return "bg-green-100 text-green-800 border-green-200";
+      return "bg-purple-100 text-green-800 border-green-200";
     case MarketCategory.Economics:
       return "bg-yellow-100 text-yellow-800 border-yellow-200";
     case MarketCategory.Crypto:
@@ -149,3 +149,4 @@ export function debounce<T extends (...args: any[]) => any>(
     timeout = setTimeout(() => func(...args), wait);
   };
 }
+

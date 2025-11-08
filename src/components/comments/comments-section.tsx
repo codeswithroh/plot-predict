@@ -1,4 +1,4 @@
-﻿import React, { useState } from 'react';
+import React, { useState } from 'react';
 import { useComments } from '@/hooks/use-comments';
 import { Button } from '@/components/ui/button';
 import { Textarea } from '@/components/ui/textarea';
@@ -63,7 +63,7 @@ export const CommentsSection: React.FC<CommentsSectionProps> = ({
   if (isLoading) {
     return (
       <div className="flex items-center justify-center py-8">
-        <Loader2 className="h-6 w-6 animate-spin text-[#22c55e]" />
+        <Loader2 className="h-6 w-6 animate-spin text-[#9b87f5]" />
         <span className="ml-2 text-gray-400">Loading comments...</span>
       </div>
     );
@@ -90,7 +90,7 @@ export const CommentsSection: React.FC<CommentsSectionProps> = ({
                   placeholder="Share your thoughts on this market..."
                   value={newComment}
                   onChange={(e) => setNewComment(e.target.value)}
-                  className="bg-gray-800/50 border-gray-700 text-white placeholder-gray-500 focus:border-[#22c55e] focus:ring-[#22c55e]/20 min-h-[100px]"
+                  className="bg-gray-800/50 border-gray-700 text-white placeholder-gray-500 focus:border-[#9b87f5] focus:ring-[#9b87f5]/20 min-h-[100px]"
                   disabled={isSubmitting}
                 />
               </div>
@@ -101,7 +101,7 @@ export const CommentsSection: React.FC<CommentsSectionProps> = ({
                 <Button
                   type="submit"
                   disabled={!newComment.trim() || isSubmitting}
-                  className="bg-gradient-to-r from-[#22c55e] to-[#16a34a] hover:from-[#16a34a] hover:to-[#15803d] text-white"
+                  className="bg-gradient-to-r from-[#9b87f5] to-[#7c3aed] hover:from-[#7c3aed] hover:to-[#6d28d9] text-white"
                 >
                   {isSubmitting ? (
                     <>
@@ -130,7 +130,7 @@ export const CommentsSection: React.FC<CommentsSectionProps> = ({
       {/* Comments List */}
       <div className="space-y-4">
         <div className="flex items-center space-x-2">
-          <MessageCircle className="h-5 w-5 text-[#22c55e]" />
+          <MessageCircle className="h-5 w-5 text-[#9b87f5]" />
           <h3 className="text-lg font-semibold text-white">
             Discussion ({comments.length})
           </h3>
@@ -151,7 +151,7 @@ export const CommentsSection: React.FC<CommentsSectionProps> = ({
                 <CardContent className="p-4">
                   <div className="flex justify-between items-start mb-3">
                     <div className="flex items-center space-x-2">
-                      <div className="w-8 h-8 bg-gradient-to-r from-[#22c55e] to-[#16a34a] rounded-full flex items-center justify-center text-white text-sm font-bold">
+                      <div className="w-8 h-8 bg-gradient-to-r from-[#9b87f5] to-[#7c3aed] rounded-full flex items-center justify-center text-white text-sm font-bold">
                         {comment.user_address.slice(2, 4).toUpperCase()}
                       </div>
                       <div>

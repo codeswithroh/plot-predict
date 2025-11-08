@@ -36,7 +36,7 @@ export const MyBets: React.FC<MyBetsProps> = ({
   if (isLoading) {
     return (
       <div className="flex items-center justify-center py-8">
-        <Loader2 className="h-6 w-6 animate-spin text-[#22c55e]" />
+        <Loader2 className="h-6 w-6 animate-spin text-[#9b87f5]" />
         <span className="ml-2 text-gray-400">Loading your bets...</span>
       </div>
     );
@@ -73,7 +73,7 @@ export const MyBets: React.FC<MyBetsProps> = ({
         <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
           <Card className="bg-gradient-to-r from-[#1A1F2C] to-[#151923] border-gray-800/50">
             <CardContent className="p-4 text-center">
-              <div className="text-2xl font-bold text-[#22c55e]">{stats.totalBets}</div>
+              <div className="text-2xl font-bold text-[#9b87f5]">{stats.totalBets}</div>
               <div className="text-xs text-gray-400">Total Bets</div>
             </CardContent>
           </Card>
@@ -104,7 +104,7 @@ export const MyBets: React.FC<MyBetsProps> = ({
       {/* Header */}
       <div className="flex items-center justify-between">
         <div className="flex items-center space-x-2">
-          <BarChart3 className="h-5 w-5 text-[#22c55e]" />
+          <BarChart3 className="h-5 w-5 text-[#9b87f5]" />
           <h3 className="text-lg font-semibold text-white">
             {showAllBets ? 'My Betting History' : 'My Bets on This Market'}
           </h3>
@@ -139,7 +139,7 @@ export const MyBets: React.FC<MyBetsProps> = ({
                     {/* Option Icon */}
                     <div className={`p-2 rounded-lg ${
                       bet.option === 0 
-                        ? 'bg-[#22c55e]/20 text-[#22c55e]' 
+                        ? 'bg-[#9b87f5]/20 text-[#9b87f5]' 
                         : 'bg-gray-600/20 text-gray-400'
                     }`}>
                       {bet.option === 0 ? (
@@ -156,7 +156,7 @@ export const MyBets: React.FC<MyBetsProps> = ({
                         <div className="mb-1">
                           <Link 
                             href={`/markets/${bet.market_id}`}
-                            className="text-white font-medium hover:text-[#22c55e] transition-colors truncate block"
+                            className="text-white font-medium hover:text-[#9b87f5] transition-colors truncate block"
                           >
                             {bet.market_title}
                           </Link>
@@ -164,13 +164,13 @@ export const MyBets: React.FC<MyBetsProps> = ({
                       )}
                       
                       <div className="flex items-center space-x-2 mb-1">
-                        <span className="text-[#22c55e] font-bold">
+                        <span className="text-[#9b87f5] font-bold">
                           {bet.amount} STT
                         </span>
                         <span className="text-gray-400 text-sm">on</span>
                         <Badge className={`text-xs ${
                           bet.option === 0 
-                            ? 'bg-[#22c55e]/20 text-[#22c55e] border-[#22c55e]/30' 
+                            ? 'bg-[#9b87f5]/20 text-[#9b87f5] border-[#9b87f5]/30' 
                             : 'bg-gray-600/20 text-gray-300 border-gray-600/30'
                         }`}>
                           {bet.option === 0 ? bet.option_a : bet.option_b}

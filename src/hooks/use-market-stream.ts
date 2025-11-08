@@ -38,12 +38,15 @@ export function useMarketStream(options: UseMarketStreamOptions = {}) {
     // Mark as processed
     processedEventIdsRef.current.add(eventId);
 
+    // Use blockchain timestamp if available (BetPlaced has timestamp field)
+    const timestamp = data.timestamp ? Number(data.timestamp) * 1000 : Date.now();
+
     const event: MarketEvent = {
       id: eventId,
       type: eventType,
       marketId: data.marketId?.toString() || options.marketId || 'all',
       data,
-      timestamp: Date.now(),
+      timestamp,
     };
 
     setEvents(prev => [event, ...prev].slice(0, 50)); // Keep last 50 events
@@ -67,62 +70,117 @@ export function useMarketStream(options: UseMarketStreamOptions = {}) {
   }, [options]);
 
   const loadHistory = useCallback(async () => {
-    if (!publicClient) return;
+    if (!publicClient) {
+      console.log('❌ No public client available');
+      return;
+    }
 
     try {
       setIsLoadingHistory(true);
       console.log('📚 Loading historical events...');
 
       const currentBlock = await publicClient.getBlockNumber();
-      const fromBlock = currentBlock - BigInt(1000); // Last ~1000 blocks
+      
+      // Somnia RPC allows max 1000 blocks per request
+      // Let's try multiple ranges if needed
+      const allBetPlacedLogs: any[] = [];
+      const allMarketResolvedLogs: any[] = [];
+      const allMarketCreatedLogs: any[] = [];
+      
+      // Try last 5000 blocks in chunks of 1000
+      const totalBlocks = 5000;
+      const chunkSize = 1000;
+      const chunks = Math.ceil(totalBlocks / chunkSize);
+      
+      for (let i = 0; i < chunks; i++) {
+        const toBlock = currentBlock - BigInt(i * chunkSize);
+        const fromBlock = toBlock - BigInt(chunkSize);
+        
+        console.log(`📚 Checking block range ${i + 1}/${chunks}:`, {
+          from: fromBlock.toString(),
+          to: toBlock.toString(),
+        });
 
-      // Get historical BetPlaced events
-      const betPlacedLogs = await publicClient.getContractEvents({
-        address: PREDICTION_MARKET_ADDRESS,
-        abi: PREDICTION_MARKET_ABI,
-        eventName: 'BetPlaced',
-        fromBlock,
-        toBlock: currentBlock,
-      });
+        try {
+          // Get BetPlaced events for this range
+          const betPlacedLogs = await publicClient.getContractEvents({
+            address: PREDICTION_MARKET_ADDRESS,
+            abi: PREDICTION_MARKET_ABI,
+            eventName: 'BetPlaced',
+            fromBlock,
+            toBlock,
+          });
+          allBetPlacedLogs.push(...betPlacedLogs);
 
-      // Get historical MarketResolved events
-      const marketResolvedLogs = await publicClient.getContractEvents({
-        address: PREDICTION_MARKET_ADDRESS,
-        abi: PREDICTION_MARKET_ABI,
-        eventName: 'MarketResolved',
-        fromBlock,
-        toBlock: currentBlock,
-      });
+          // Get MarketResolved events for this range
+          const marketResolvedLogs = await publicClient.getContractEvents({
+            address: PREDICTION_MARKET_ADDRESS,
+            abi: PREDICTION_MARKET_ABI,
+            eventName: 'MarketResolved',
+            fromBlock,
+            toBlock,
+          });
+          allMarketResolvedLogs.push(...marketResolvedLogs);
 
-      // Get historical MarketCreated events
-      const marketCreatedLogs = await publicClient.getContractEvents({
-        address: PREDICTION_MARKET_ADDRESS,
-        abi: PREDICTION_MARKET_ABI,
-        eventName: 'MarketCreated',
-        fromBlock,
-        toBlock: currentBlock,
+          // Get MarketCreated events for this range
+          const marketCreatedLogs = await publicClient.getContractEvents({
+            address: PREDICTION_MARKET_ADDRESS,
+            abi: PREDICTION_MARKET_ABI,
+            eventName: 'MarketCreated',
+            fromBlock,
+            toBlock,
+          });
+          allMarketCreatedLogs.push(...marketCreatedLogs);
+          
+          console.log(`📚 Found in range ${i + 1}: ${betPlacedLogs.length} bets, ${marketResolvedLogs.length} resolutions, ${marketCreatedLogs.length} markets`);
+        } catch (error) {
+          console.error(`❌ Error fetching range ${i + 1}:`, error);
+        }
+      }
+
+      console.log('📚 Total events found:', {
+        bets: allBetPlacedLogs.length,
+        resolutions: allMarketResolvedLogs.length,
+        markets: allMarketCreatedLogs.length,
       });
 
       // Process historical events
       const historicalEvents: MarketEvent[] = [];
 
-      betPlacedLogs.forEach((log: any) => {
+      // Get block timestamps for accurate event times
+      const blockTimestamps = new Map<bigint, number>();
+      
+      for (const log of allBetPlacedLogs) {
+        if (!blockTimestamps.has(log.blockNumber)) {
+          try {
+            const block = await publicClient.getBlock({ blockNumber: log.blockNumber });
+            blockTimestamps.set(log.blockNumber, Number(block.timestamp) * 1000);
+          } catch (error) {
+            console.error('Failed to get block timestamp:', error);
+          }
+        }
+      }
+
+      allBetPlacedLogs.forEach((log: any) => {
         const eventId = `${log.blockNumber}-${log.logIndex}-BET_PLACED-${log.args.marketId?.toString() || ''}-${log.args.user?.toString() || ''}`;
         if (!processedEventIdsRef.current.has(eventId)) {
+          // Use block timestamp for accurate time
+          const timestamp = blockTimestamps.get(log.blockNumber) || Date.now();
           historicalEvents.push({
             id: eventId,
             type: 'BET_PLACED',
             marketId: log.args.marketId?.toString() || 'unknown',
             data: log.args,
-            timestamp: Date.now(),
+            timestamp,
           });
           processedEventIdsRef.current.add(eventId);
         }
       });
 
-      marketResolvedLogs.forEach((log: any) => {
+      allMarketResolvedLogs.forEach((log: any) => {
         const eventId = `${log.blockNumber}-${log.logIndex}-MARKET_RESOLVED-${log.args.marketId?.toString() || ''}`;
         if (!processedEventIdsRef.current.has(eventId)) {
+          // MarketResolved doesn't have timestamp in event, use current time
           historicalEvents.push({
             id: eventId,
             type: 'MARKET_RESOLVED',
@@ -134,9 +192,10 @@ export function useMarketStream(options: UseMarketStreamOptions = {}) {
         }
       });
 
-      marketCreatedLogs.forEach((log: any) => {
+      allMarketCreatedLogs.forEach((log: any) => {
         const eventId = `${log.blockNumber}-${log.logIndex}-MARKET_CREATED-${log.args.marketId?.toString() || ''}`;
         if (!processedEventIdsRef.current.has(eventId)) {
+          // MarketCreated doesn't have timestamp in event, use current time
           historicalEvents.push({
             id: eventId,
             type: 'MARKET_CREATED',

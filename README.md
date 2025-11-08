@@ -1,33 +1,205 @@
-# Monad Blitz Bangalore Submission Process
+﻿# Somnia Predict 🎯
 
-1. Visit the `monad-blitz-bangalore` repo (link here) and fork it.
+A decentralized prediction market platform built on Somnia Testnet, enabling users to trade on the outcomes of real-world events using STT tokens.
 
-![image](https://github.com/user-attachments/assets/ab46b2ea-ee0f-4237-87ef-c33bb1a94749)
+## 🌟 Features
 
-2. Give it your project name, a one-liner description, make sure you are forking `main` branch and click `Create Fork`.
+- **Binary Prediction Markets** - Trade on Yes/No outcomes
+- **Somnia Integration** - Native STT token support
+- **Real-time Activity** - Live bet tracking and market updates
+- **User Dashboard** - Complete betting history and statistics
+- **Comments System** - Market discussions and community engagement
+- **Admin Controls** - Market creation and resolution tools
+- **Responsive Design** - Mobile-first UI with dark theme
 
-![image](https://github.com/user-attachments/assets/ffdebab7-c340-4e14-bd3c-36905f1016a3)
+## 🚀 Tech Stack
 
-3. In your fork you can make all the changes you want, add code of your project, create branches, add information to `README.md`, you can change anything and everything.
+- **Frontend**: Next.js 14, TypeScript, Tailwind CSS
+- **Blockchain**: Somnia Testnet, Solidity Smart Contracts
+- **Wallet**: RainbowKit + wagmi (EVM compatibility)
+- **Database**: Supabase (PostgreSQL)
+- **State Management**: Zustand
+- **UI Components**: Radix UI, Lucide Icons
 
-4. Once you are done with your project and ready for submission, create a pull request.
+## 🔗 Links
 
-![image](https://github.com/user-attachments/assets/58aa7140-55db-49db-9361-332449dbe116)
+- **Network**: Somnia Testnet (Chain ID: 50312 / 0xc488)
+- **Token**: STT (Somnia Test Token)
+- **RPC**: https://dream-rpc.somnia.network
+- **Explorer**: https://somnia-testnet.blockscout.com
+- **Contract**: `0x5B9AC17b8b24b0B0b0eeA6Ea334e70435226Dc74`
 
-![image](https://github.com/user-attachments/assets/5c8c61b1-23fd-4177-b06e-e8fca3a61ad4)
+## 🚀 Quick Start
 
-5. Make sure you are create a pull request to the right repo `monad-developers/monad-blitz-bangalore`.
+### Prerequisites
+- Node.js 18+ and npm
+- MetaMask or compatible Web3 wallet
+- STT tokens (get from Somnia testnet faucet)
 
-![image](https://github.com/user-attachments/assets/41774ebc-d64c-43de-b3be-7e46d21bcaba)
+### Installation
 
-6. Make sure you see “Able to merge”, when creating a pull request then you can click `Create Pull Request`.
+1. **Clone the repository**
+```bash
+git clone <repository-url>
+cd somnia-predict
+```
 
-![image](https://github.com/user-attachments/assets/b52f5e6f-9091-43af-9025-f2c61a7d1205)
+2. **Install dependencies**
+```bash
+npm install
+```
 
-7. Give the pull request your project name and a description of the project (describe as much as you can about your project you can even add video demo links) then click `Create pull request`.
+3. **Environment setup**
+```bash
+cp .env.example .env
+# Configure your environment variables
+```
 
-![image](https://github.com/user-attachments/assets/9a3cc30a-498f-4d83-9060-adb11f88eff6)
+4. **Run development server**
+```bash
+npm run dev
+```
 
-8. Finally verify if you created your pull request correctly by checking the repo on which the pull request is created and the source and destination branch of the pull request!
+5. **Open application**
+```
+http://localhost:3000
+```
 
-![image](https://github.com/user-attachments/assets/b16befcd-2c29-4520-aa70-29883306e85c)
+### Environment Variables
+```env
+# Somnia Testnet
+NEXT_PUBLIC_SOMNIA_RPC_URL=https://dream-rpc.somnia.network
+NEXT_PUBLIC_CONTRACT_ADDRESS=0x5B9AC17b8b24b0B0b0eeA6Ea334e70435226Dc74
+NEXT_PUBLIC_ADMIN_ADDRESS=0x71197e7a1CA5A2cb2AD82432B924F69B1E3dB123
+
+# WalletConnect
+NEXT_PUBLIC_WALLETCONNECT_PROJECT_ID=<your_project_id>
+
+# Supabase
+NEXT_PUBLIC_SUPABASE_URL=<your_supabase_url>
+NEXT_PUBLIC_SUPABASE_ANON_KEY=<your_supabase_anon_key>
+
+# App Configuration
+NEXT_PUBLIC_APP_URL=http://localhost:3000
+```
+
+## 📱 Usage
+
+### For Users
+1. **Connect Wallet** - Use MetaMask or any Web3 wallet
+2. **Browse Markets** - Explore active prediction markets
+3. **Place Bets** - Stake STT on Yes/No outcomes
+4. **Track Performance** - View your betting history
+5. **Claim Winnings** - Collect rewards from winning bets
+6. **Join Discussions** - Comment on markets
+
+### For Admins
+1. **Create Markets** - Set up new prediction markets
+2. **Manage Markets** - Pause/resume market activity
+3. **Resolve Markets** - Determine winning outcomes
+4. **Monitor Activity** - Track platform statistics
+
+## 🏗️ Smart Contract
+
+### Contract Details
+- **Address**: `0x5B9AC17b8b24b0B0b0eeA6Ea334e70435226Dc74`
+- **Network**: Somnia Testnet
+- **Platform Fee**: 2.5%
+- **Min Bet**: 0.1 STT
+- **Max Bet**: 1000 STT
+
+### Available Scripts
+```bash
+# Contract deployment
+npm run deploy:testnet
+
+# Market management
+npm run create-btc-market
+npm run create-eth-market
+npm run resolve-market
+
+# Testing
+npm run create-test-user
+npm run fund-test-user
+npm run place-test-bet
+npm run claim-test-winnings
+
+# Full test flow
+npm run test-full-flow
+```
+
+## 🗄️ Database Schema
+
+The application uses Supabase for storing:
+- **Bet Activities** - All betting transactions and history
+- **Comments** - Market discussions and user interactions
+- **User Statistics** - Performance metrics and analytics
+
+Run the SQL schema:
+```sql
+-- Execute supabase-schema.sql in your Supabase SQL Editor
+```
+
+## 🎨 Architecture
+
+See [diagrams.md](./diagrams.md) for detailed system architecture and flow diagrams.
+
+## 🛠️ Development
+
+### Project Structure
+```
+├── src/
+│   ├── app/                 # Next.js app router pages
+│   ├── components/          # React components
+│   ├── hooks/              # Custom React hooks
+│   ├── lib/                # Utility libraries
+│   ├── providers/          # Context providers
+│   └── types/              # TypeScript definitions
+├── contracts/              # Solidity smart contracts
+├── scripts/               # Deployment and utility scripts
+└── public/               # Static assets
+```
+
+### Key Components
+- **Market Cards** - Display market information
+- **Bet Dialog** - Handle bet placement with validation
+- **Activity Feed** - Show real-time betting activity
+- **Comments System** - Enable market discussions
+- **Admin Dashboard** - Market management tools
+
+## 🔐 Security
+
+- **Smart Contract Audited** - Comprehensive security review
+- **Input Validation** - Client and server-side validation
+- **Rate Limiting** - API protection against abuse
+- **Wallet Security** - Non-custodial, user-controlled funds
+- **Region Restrictions** - Compliance with local regulations
+
+## 🤝 Contributing
+
+1. Fork the repository
+2. Create a feature branch (`git checkout -b feature/amazing-feature`)
+3. Commit your changes (`git commit -m 'Add amazing feature'`)
+4. Push to the branch (`git push origin feature/amazing-feature`)
+5. Open a Pull Request
+
+## 📄 License
+
+This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details.
+
+## 🙏 Acknowledgments
+
+- **Somnia Team** - For the robust blockchain infrastructure
+- **RainbowKit** - For excellent wallet connection UX
+- **Supabase** - For reliable database and real-time features
+- **Vercel** - For deployment and hosting
+
+## 📞 Support
+
+- **Documentation**: [Learn Page](http://localhost:3000/learn)
+- **Issues**: [GitHub Issues](https://github.com/your-repo/issues)
+- **Community**: [Discord/Telegram]
+
+---
+
+**Built with ❤️ for the Somnia ecosystem**

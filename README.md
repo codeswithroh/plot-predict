@@ -28,7 +28,7 @@ A decentralized prediction market platform built on Somnia Testnet, enabling use
 - **Network**: Somnia Testnet (Chain ID: 50312 / 0xc488)
 - **Token**: STT (Somnia Test Token)
 - **RPC**: https://dream-rpc.somnia.network
-- **Explorer**: https://somnia-testnet.blockscout.com
+- **Explorer**: https://shannon-explorer.somnia.network/
 - **Contract**: `0x5B9AC17b8b24b0B0b0eeA6Ea334e70435226Dc74`
 
 ## 🚀 Quick Start

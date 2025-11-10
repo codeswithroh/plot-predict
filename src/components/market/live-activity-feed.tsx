@@ -77,6 +77,7 @@ export const LiveActivityFeed: React.FC<LiveActivityFeedProps> = ({
                 disabled={isLoadingHistory}
                 variant="ghost"
                 size="sm"
+                className="text-gray-300 hover:text-white hover:bg-gray-800/50"
               >
                 {isLoadingHistory ? (
                   <>
@@ -92,36 +93,76 @@ export const LiveActivityFeed: React.FC<LiveActivityFeedProps> = ({
               </Button>
             </div>
             <div className="space-y-2 max-h-64 overflow-y-auto">
-              {events.map((event) => (
-              <div
-                key={event.id || `${event.timestamp}`}
-                className="bg-gray-800/30 rounded-lg p-3 border border-gray-700/50 animate-in slide-in-from-top duration-300"
-              >
-                <div className="flex items-center space-x-2">
-                  {event.type === 'BET_PLACED' && (
-                    <>
-                      <TrendingUp className="h-4 w-4 text-[#9b87f5]" />
-                      <span className="text-sm text-white font-medium">New Bet Placed</span>
-                    </>
-                  )}
-                  {event.type === 'MARKET_RESOLVED' && (
-                    <>
-                      <CheckCircle className="h-4 w-4 text-green-400" />
-                      <span className="text-sm text-white font-medium">Market Resolved</span>
-                    </>
-                  )}
-                  {event.type === 'MARKET_CREATED' && (
-                    <>
-                      <Activity className="h-4 w-4 text-blue-400" />
-                      <span className="text-sm text-white font-medium">New Market</span>
-                    </>
-                  )}
-                </div>
-                <p className="text-xs text-gray-400 mt-1">
-                  {new Date(event.timestamp).toLocaleTimeString()}
-                </p>
-              </div>
-              ))}
+              {events.map((event) => {
+                // Extract event details
+                const amount = event.data?.amount ? (Number(event.data.amount) / 1e18).toFixed(2) : '?';
+                const outcome = event.data?.outcome === 0 ? 'Yes' : 'No';
+                const user = event.data?.user ? `${event.data.user.slice(0, 6)}...${event.data.user.slice(-4)}` : 'Unknown';
+                const marketTitleText = event.data?.marketTitle || `Market #${event.marketId}`;
+                
+                return (
+                  <div
+                    key={event.id || `${event.timestamp}`}
+                    className="bg-gray-800/30 rounded-lg p-3 border border-gray-700/50 animate-in slide-in-from-top duration-300"
+                  >
+                    {event.type === 'BET_PLACED' && (
+                      <>
+                        <div className="flex items-center space-x-2 mb-1">
+                          <TrendingUp className="h-4 w-4 text-[#9b87f5]" />
+                          <span className="text-sm text-white font-medium">New Bet</span>
+                        </div>
+                        <div className="text-xs text-gray-300 space-y-0.5">
+                          <div className="text-xs text-[#9b87f5] font-medium mb-1 truncate">
+                            {marketTitleText}
+                          </div>
+                          <div className="flex items-center gap-1">
+                            <span className="text-gray-400">Amount:</span>
+                            <span className="text-[#9b87f5] font-semibold">{amount} STT</span>
+                            <span className="text-gray-400">on</span>
+                            <span className="text-white font-medium">{outcome}</span>
+                          </div>
+                          <div className="flex items-center gap-1">
+                            <span className="text-gray-400">By:</span>
+                            <span className="text-gray-300">{user}</span>
+                          </div>
+                        </div>
+                      </>
+                    )}
+                    
+                    {event.type === 'MARKET_RESOLVED' && (
+                      <>
+                        <div className="flex items-center space-x-2 mb-1">
+                          <CheckCircle className="h-4 w-4 text-green-400" />
+                          <span className="text-sm text-white font-medium">Market Resolved</span>
+                        </div>
+                        <div className="text-xs text-gray-300">
+                          <span className="text-gray-400">Winner:</span>
+                          <span className="text-green-400 font-semibold ml-1">
+                            {event.data?.winningOutcome === 0 ? 'Yes' : 'No'}
+                          </span>
+                        </div>
+                      </>
+                    )}
+                    
+                    {event.type === 'MARKET_CREATED' && (
+                      <>
+                        <div className="flex items-center space-x-2 mb-1">
+                          <Activity className="h-4 w-4 text-blue-400" />
+                          <span className="text-sm text-white font-medium">New Market</span>
+                        </div>
+                        <div className="text-xs text-gray-300">
+                          <span className="text-gray-400">Market ID:</span>
+                          <span className="text-blue-400 font-semibold ml-1">#{event.marketId}</span>
+                        </div>
+                      </>
+                    )}
+                    
+                    <p className="text-xs text-gray-500 mt-1.5">
+                      {new Date(event.timestamp).toLocaleTimeString()}
+                    </p>
+                  </div>
+                );
+              })}
             </div>
           </>
         )}

@@ -51,14 +51,43 @@ export default function MarketDetailPage() {
   const loading = marketLoading || positionLoading;
   const error = null;
   
-  // Mock data for development
-  const trades: any[] = [];
-  const comments: any[] = [];
+  // State for bet count
+  const [betCount, setBetCount] = useState(0);
 
   const [betDialogOpen, setBetDialogOpen] = useState(false);
   const [selectedSide, setSelectedSide] = useState<"optionA" | "optionB">("optionA");
   const [isBookmarked, setIsBookmarked] = useState(false);
   const [imageError, setImageError] = useState(false);
+
+  // Fetch bet count from Supabase
+  useEffect(() => {
+    const fetchBetCount = async () => {
+      if (!marketId) return;
+      
+      try {
+        const { supabase } = await import('@/lib/supabase');
+        console.log('📊 Fetching bet count for market:', marketId);
+        
+        const { count, error } = await supabase
+          .from('bet_activities')
+          .select('*', { count: 'exact', head: true })
+          .eq('market_id', marketId);
+        
+        console.log('📊 Bet count result:', { count, error });
+        
+        if (!error && count !== null) {
+          console.log('✅ Setting bet count to:', count);
+          setBetCount(count);
+        } else if (error) {
+          console.error('❌ Error fetching bet count:', error);
+        }
+      } catch (error) {
+        console.error('❌ Failed to fetch bet count:', error);
+      }
+    };
+    
+    fetchBetCount();
+  }, [marketId]);
 
   // Auto-refresh market data every 30 seconds
   useEffect(() => {
@@ -298,7 +327,7 @@ export default function MarketDetailPage() {
             <LiveStats 
               marketId={marketId}
               initialVolume={parseFloat(market.totalPool)}
-              initialBets={0}
+              initialBets={betCount}
             />
           </div>
         </div>
@@ -468,8 +497,8 @@ export default function MarketDetailPage() {
                     <div className="text-xs text-gray-400 font-medium">Shares</div>
                   </div>
                   <div className="text-center p-3 rounded-lg bg-gray-800/20">
-                    <div className="text-xl font-bold text-white">{trades.length}</div>
-                    <div className="text-xs text-gray-400 font-medium">Trades</div>
+                    <div className="text-xl font-bold text-white">{betCount}</div>
+                    <div className="text-xs text-gray-400 font-medium">Bets</div>
                   </div>
                 </div>
               </CardContent>

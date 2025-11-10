@@ -34,6 +34,7 @@ export const LiveStats: React.FC<LiveStatsProps> = ({
 
   // Sync with initial values
   useEffect(() => {
+    console.log('📊 LiveStats received props:', { initialVolume, initialBets });
     setVolume(initialVolume);
     setBetCount(initialBets);
   }, [initialVolume, initialBets]);

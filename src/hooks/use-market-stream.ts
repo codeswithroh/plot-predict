@@ -27,6 +27,7 @@ export function useMarketStream(options: UseMarketStreamOptions = {}) {
   const [events, setEvents] = useState<MarketEvent[]>([]);
   const [isStreaming, setIsStreaming] = useState(false);
   const [isLoadingHistory, setIsLoadingHistory] = useState(false);
+  const lastCheckedBlockRef = useRef<bigint>(BigInt(0));
 
   const handleEvent = useCallback(async (eventType: MarketEvent['type'], data: any, blockNumber?: bigint, logIndex?: number) => {
     // Create unique ID from block number, log index, and event data
@@ -41,6 +42,31 @@ export function useMarketStream(options: UseMarketStreamOptions = {}) {
     // Mark as processed
     globalProcessedEventIds.add(eventId);
 
+    // Fetch market details first
+    let marketTitle = `Market #${data.marketId?.toString()}`;
+    try {
+      if (publicClient && data.marketId) {
+        console.log('🔍 Fetching market title for:', data.marketId?.toString());
+        const marketData = await publicClient.readContract({
+          address: PREDICTION_MARKET_ADDRESS,
+          abi: PREDICTION_MARKET_ABI,
+          functionName: 'getMarket',
+          args: [data.marketId],
+        }) as any;
+        
+        console.log('📊 Market data received:', marketData);
+        
+        if (marketData && marketData.title) {
+          marketTitle = marketData.title;
+          console.log('✅ Market title set to:', marketTitle);
+        } else {
+          console.log('⚠️ No title in market data');
+        }
+      }
+    } catch (error) {
+      console.error('❌ Failed to fetch market title:', error);
+    }
+
     // Use blockchain timestamp if available (BetPlaced has timestamp field)
     const timestamp = data.timestamp ? Number(data.timestamp) * 1000 : Date.now();
 
@@ -48,9 +74,14 @@ export function useMarketStream(options: UseMarketStreamOptions = {}) {
       id: eventId,
       type: eventType,
       marketId: data.marketId?.toString() || options.marketId || 'all',
-      data,
+      data: {
+        ...data,
+        marketTitle, // Add market title to event data
+      },
       timestamp,
     };
+
+    console.log('📦 Event created with data:', { marketTitle, eventType, marketId: event.marketId });
 
     setEvents(prev => [event, ...prev].slice(0, 50)); // Keep last 50 events
 
@@ -59,28 +90,6 @@ export function useMarketStream(options: UseMarketStreamOptions = {}) {
       case 'BET_PLACED':
         const amount = data.amount ? (Number(data.amount) / 1e18).toFixed(2) : '?';
         const outcome = data.outcome === 0 ? 'Yes' : 'No';
-        
-        // Fetch market details for notification
-        let marketTitle = `Market #${data.marketId?.toString()}`;
-        try {
-          if (publicClient && data.marketId) {
-            const marketData = await publicClient.readContract({
-              address: PREDICTION_MARKET_ADDRESS,
-              abi: PREDICTION_MARKET_ABI,
-              functionName: 'getMarket',
-              args: [data.marketId],
-            }) as any;
-            
-            console.log('📊 Market data for notification:', marketData);
-            
-            // viem returns tuple as object with both numeric and named keys
-            if (marketData && marketData.title) {
-              marketTitle = marketData.title;
-            }
-          }
-        } catch (error) {
-          console.error('Failed to fetch market title:', error);
-        }
         
         toast.success(`New bet: ${amount} STT on ${outcome}`, {
           description: marketTitle,
@@ -220,16 +229,43 @@ export function useMarketStream(options: UseMarketStreamOptions = {}) {
         }
       }
 
+      // Fetch market titles for all unique markets
+      const uniqueMarketIds = new Set(allBetPlacedLogs.map((log: any) => log.args.marketId?.toString()).filter(Boolean));
+      const marketTitles = new Map<string, string>();
+      
+      for (const marketId of Array.from(uniqueMarketIds)) {
+        try {
+          const marketData = await publicClient.readContract({
+            address: PREDICTION_MARKET_ADDRESS,
+            abi: PREDICTION_MARKET_ABI,
+            functionName: 'getMarket',
+            args: [BigInt(marketId)],
+          }) as any;
+          
+          if (marketData && marketData.title) {
+            marketTitles.set(marketId, marketData.title);
+          }
+        } catch (error) {
+          console.error(`Failed to fetch title for market ${marketId}:`, error);
+        }
+      }
+
       allBetPlacedLogs.forEach((log: any) => {
         const eventId = `${log.blockNumber}-${log.logIndex}-BET_PLACED-${log.args.marketId?.toString() || ''}-${log.args.user?.toString() || ''}`;
         if (!globalProcessedEventIds.has(eventId)) {
+          const marketId = log.args.marketId?.toString() || 'unknown';
+          const marketTitle = marketTitles.get(marketId) || `Market #${marketId}`;
+          
           // Use block timestamp for accurate time
           const timestamp = blockTimestamps.get(log.blockNumber) || Date.now();
           historicalEvents.push({
             id: eventId,
             type: 'BET_PLACED',
-            marketId: log.args.marketId?.toString() || 'unknown',
-            data: log.args,
+            marketId,
+            data: {
+              ...log.args,
+              marketTitle,
+            },
             timestamp,
           });
           globalProcessedEventIds.add(eventId);
@@ -289,50 +325,55 @@ export function useMarketStream(options: UseMarketStreamOptions = {}) {
         setIsStreaming(true);
         console.log('🔴 Starting market stream for contract:', PREDICTION_MARKET_ADDRESS);
 
-        let lastCheckedBlock = await publicClient.getBlockNumber();
-        console.log('📍 Starting from block:', lastCheckedBlock.toString());
+        // Initialize lastCheckedBlock if not set
+        if (lastCheckedBlockRef.current === BigInt(0)) {
+          lastCheckedBlockRef.current = await publicClient.getBlockNumber();
+          console.log('📍 Starting from block:', lastCheckedBlockRef.current.toString());
+        }
 
-        // Manual polling: Check for new events every 3 seconds
+        // Manual polling: Check for new events every 1 second
         const pollInterval = setInterval(async () => {
           try {
+            
             const currentBlock = await publicClient.getBlockNumber();
             
-            if (currentBlock > lastCheckedBlock) {
-              console.log('🔍 Checking blocks', lastCheckedBlock.toString(), 'to', currentBlock.toString());
+            const lastBlock = lastCheckedBlockRef.current;
+            
+            if (currentBlock > lastBlock) {
+              console.log('🔍 Checking blocks', lastBlock.toString(), 'to', currentBlock.toString());
               
               // Get new BetPlaced events
               const newBets = await publicClient.getContractEvents({
                 address: PREDICTION_MARKET_ADDRESS,
                 abi: PREDICTION_MARKET_ABI,
                 eventName: 'BetPlaced',
-                fromBlock: lastCheckedBlock + BigInt(1),
+                fromBlock: lastBlock + BigInt(1),
                 toBlock: currentBlock,
               });
 
               if (newBets.length > 0) {
                 console.log('🎯 Found', newBets.length, 'new bet(s)!');
                 
-                // Get block timestamps
+                // Process each bet
                 for (const log of newBets) {
                   try {
-                    const block = await publicClient.getBlock({ blockNumber: log.blockNumber });
-                    const timestamp = Number(block.timestamp) * 1000;
-                    handleEvent('BET_PLACED', log.args, log.blockNumber, log.logIndex);
+                    console.log('📦 Processing bet from block:', log.blockNumber.toString());
+                    await handleEvent('BET_PLACED', log.args, log.blockNumber, log.logIndex);
                   } catch (error) {
                     console.error('Error processing bet:', error);
                   }
                 }
               }
 
-              lastCheckedBlock = currentBlock;
+              lastCheckedBlockRef.current = currentBlock;
             }
           } catch (error) {
             console.error('❌ Polling error:', error);
           }
-        }, 3000); // Check every 3 seconds
+        }, 1000); // Check every 1 second for faster updates
 
         unwatchFunctions.push(() => clearInterval(pollInterval));
-        console.log('✅ Manual polling started (every 3 seconds)');
+        console.log('✅ Manual polling started (every 1 second)');
 
         // Watch MarketResolved events
         const unwatchMarketResolved = publicClient.watchContractEvent({

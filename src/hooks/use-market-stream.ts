@@ -2,6 +2,7 @@ import { useEffect, useState, useCallback, useRef } from 'react';
 import { useSomniaStreams } from '@/providers/somnia-streams-provider';
 import { PREDICTION_MARKET_ADDRESS, PREDICTION_MARKET_ABI } from '@/lib/contracts/prediction-market';
 import { toast } from 'sonner';
+import { formatEther } from 'viem';
 
 interface MarketEvent {
   id: string; // Unique identifier for deduplication
@@ -27,7 +28,7 @@ export function useMarketStream(options: UseMarketStreamOptions = {}) {
   const [isStreaming, setIsStreaming] = useState(false);
   const [isLoadingHistory, setIsLoadingHistory] = useState(false);
 
-  const handleEvent = useCallback((eventType: MarketEvent['type'], data: any, blockNumber?: bigint, logIndex?: number) => {
+  const handleEvent = useCallback(async (eventType: MarketEvent['type'], data: any, blockNumber?: bigint, logIndex?: number) => {
     // Create unique ID from block number, log index, and event data
     const eventId = `${blockNumber}-${logIndex}-${eventType}-${data.marketId?.toString() || ''}-${data.user?.toString() || ''}`;
     
@@ -58,29 +59,74 @@ export function useMarketStream(options: UseMarketStreamOptions = {}) {
       case 'BET_PLACED':
         const amount = data.amount ? (Number(data.amount) / 1e18).toFixed(2) : '?';
         const outcome = data.outcome === 0 ? 'Yes' : 'No';
+        
+        // Fetch market details for notification
+        let marketTitle = `Market #${data.marketId?.toString()}`;
+        try {
+          if (publicClient && data.marketId) {
+            const marketData = await publicClient.readContract({
+              address: PREDICTION_MARKET_ADDRESS,
+              abi: PREDICTION_MARKET_ABI,
+              functionName: 'getMarket',
+              args: [data.marketId],
+            }) as any;
+            
+            console.log('📊 Market data for notification:', marketData);
+            
+            // viem returns tuple as object with both numeric and named keys
+            if (marketData && marketData.title) {
+              marketTitle = marketData.title;
+            }
+          }
+        } catch (error) {
+          console.error('Failed to fetch market title:', error);
+        }
+        
         toast.success(`New bet: ${amount} STT on ${outcome}`, {
-          description: 'A new prediction was just placed!',
+          description: marketTitle,
         });
         options.onBetPlaced?.(data);
         console.log('🎯 New bet placed:', data);
         break;
       case 'MARKET_RESOLVED':
         const winner = data.winningOutcome === 0 ? 'Yes' : 'No';
-        toast.success(`Market Resolved!`, {
+        
+        // Fetch market title for resolved notification
+        let resolvedMarketTitle = `Market #${data.marketId?.toString()}`;
+        try {
+          if (publicClient && data.marketId) {
+            const marketData = await publicClient.readContract({
+              address: PREDICTION_MARKET_ADDRESS,
+              abi: PREDICTION_MARKET_ABI,
+              functionName: 'getMarket',
+              args: [data.marketId],
+            }) as any;
+            
+            if (marketData && marketData.title) {
+              resolvedMarketTitle = marketData.title;
+            }
+          }
+        } catch (error) {
+          console.error('Failed to fetch market title:', error);
+        }
+        
+        toast.success(`Market Resolved: ${resolvedMarketTitle}`, {
           description: `Winner: ${winner}`,
         });
         options.onMarketResolved?.(data);
         console.log('⚖️ Market resolved:', data);
         break;
       case 'MARKET_CREATED':
+        // For created events, title is in the event data
+        const createdTitle = data.title || `Market #${data.marketId?.toString()}`;
         toast.info('New Market Created!', {
-          description: 'A new prediction market is now available',
+          description: createdTitle,
         });
         options.onMarketCreated?.(data);
         console.log('🆕 New market created:', data);
         break;
     }
-  }, [options]);
+  }, [options, publicClient]);
 
   const loadHistory = useCallback(async () => {
     if (!publicClient) {

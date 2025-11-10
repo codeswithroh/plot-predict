@@ -4,6 +4,7 @@
 import { MarketCard } from "@/components/market/market-card";
 import { Button } from "@/components/ui/button";
 import { usePredictionContractRead } from "@/hooks/use-prediction-contract";
+import { useBetStats } from "@/hooks/use-bet-stats";
 import { ArrowRight, TrendingUp, BarChart3, Activity, Coins, Users } from "lucide-react";
 import { formatCompactCurrency } from "@/lib/constants";
 import Link from "next/link";
@@ -13,6 +14,7 @@ import CountUp from "react-countup";
 export default function HomePage() {
     // Use contract hooks for real data
     const { activeMarkets, allMarkets, activeMarketsLoading, allMarketsLoading, refetchAllMarkets, refetchActiveMarkets } = usePredictionContractRead();
+    const { stats: betStats, isLoading: betStatsLoading } = useBetStats();
     
     const marketsLoading = activeMarketsLoading || allMarketsLoading;
     const marketsError = null;
@@ -34,20 +36,22 @@ export default function HomePage() {
             const poolValue = parseFloat(market.totalPool || "0");
             return sum + (isNaN(poolValue) ? 0 : poolValue);
         }, 0);
-        const totalUsers = new Set(allMarkets.map(m => m.creator)).size;
         
         console.log("📊 Platform Stats:", {
             totalVolume,
+            totalBets: betStats.totalBets,
+            uniqueTraders: betStats.uniqueTraders,
             markets: allMarkets.map(m => ({ id: m.id, pool: m.totalPool }))
         });
         
         return {
             totalVolume,
-            totalUsers,
+            uniqueTraders: betStats.uniqueTraders,
+            totalBets: betStats.totalBets,
             activeMarkets: activeMarkets.length,
             totalMarkets: allMarkets.length,
         };
-    }, [allMarkets, activeMarkets]);
+    }, [allMarkets, activeMarkets, betStats]);
 
     console.log("?? HomePage state (using contract hooks):", {
         marketsLoading,
@@ -181,7 +185,7 @@ export default function HomePage() {
                             <div className="text-sm text-gray-400 mt-1">Total Volume</div>
                         </div>
 
-                        {/* Trades */}
+                        {/* Total Bets */}
                         <div className="bg-[#1A1F2C] rounded-xl p-6 shadow-lg border border-gray-800/60 hover:border-[#9b87f5]/30 transition-colors">
                             <div className="flex items-start justify-between mb-4">
                                 <div className="p-2 rounded-lg bg-[#9b87f5]/15">
@@ -190,9 +194,9 @@ export default function HomePage() {
                                 <span className="text-[10px] px-2 py-0.5 rounded-full bg-[#9b87f5]/10 text-[#9b87f5] border border-[#9b87f5]/20">all-time</span>
                             </div>
                             <div className="text-3xl font-bold text-white">
-                                <CountUp end={platformStats.totalUsers} suffix="+" />
+                                <CountUp end={platformStats.totalBets} />
                             </div>
-                            <div className="text-sm text-gray-400 mt-1">Trades</div>
+                            <div className="text-sm text-gray-400 mt-1">Total Bets</div>
                         </div>
                     </div>
                 </div>

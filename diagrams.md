@@ -176,44 +176,42 @@ erDiagram
     BET_ACTIVITIES ||--o{ COMMENTS : "market_id"
 ```
 
-## 🔴 Somnia Streams Live Updates Flow
+## 🔴 Somnia Streams Implementation
 
 ```mermaid
 flowchart TD
-    Start([User Opens App]) --> InitSDK[Initialize Somnia Streams SDK]
-    InitSDK --> CreateClient[Create Public Client]
-    CreateClient --> ConnectWS[Connect WebSocket]
+    Start([App Initialization]) --> Provider[SomniaStreamsProvider]
+    Provider --> CreateClient[Create viem publicClient]
+    CreateClient --> Context[Provide via React Context]
     
-    ConnectWS --> Subscribe{Subscribe to Events}
-    Subscribe --> BetEvent[BetPlaced Events]
-    Subscribe --> ResolveEvent[MarketResolved Events]
-    Subscribe --> CreateEvent[MarketCreated Events]
+    Context --> Hook[useMarketStream Hook]
+    Hook --> Polling[Manual Polling Every 3s]
+    Hook --> Watch[watchContractEvent]
     
-    BetEvent --> OnBet[onBetPlaced Handler]
-    ResolveEvent --> OnResolve[onMarketResolved Handler]
-    CreateEvent --> OnCreate[onMarketCreated Handler]
+    Polling --> GetEvents[getContractEvents]
+    GetEvents --> BetPlaced[BetPlaced Events]
+    GetEvents --> MarketResolved[MarketResolved Events]
+    GetEvents --> MarketCreated[MarketCreated Events]
     
-    OnBet --> UpdateUI1[Update Activity Feed]
-    OnBet --> UpdateStats[Update Live Stats]
-    OnBet --> RefetchData[Refetch Market Data]
+    Watch --> WatchResolved[Watch MarketResolved]
+    Watch --> WatchCreated[Watch MarketCreated]
     
-    OnResolve --> ShowNotif[Show Toast Notification]
-    OnResolve --> UpdateStatus[Update Market Status]
+    BetPlaced --> Dedupe[Deduplication Check]
+    MarketResolved --> Dedupe
+    MarketCreated --> Dedupe
+    WatchResolved --> Dedupe
+    WatchCreated --> Dedupe
     
-    OnCreate --> NewMarketNotif[New Market Notification]
+    Dedupe --> FetchMarket[Fetch Market Details]
+    FetchMarket --> Notification[Show Toast Notification]
+    Notification --> UpdateState[Update Local State]
+    UpdateState --> Callback[Trigger Callbacks]
     
-    UpdateUI1 --> Animate[Animate UI Changes]
-    UpdateStats --> FlashBadge[Flash LIVE Badge]
+    Callback --> RefreshUI[UI Auto-Refresh]
     
-    Animate --> End([Real-time UI Updated])
-    FlashBadge --> End
-    ShowNotif --> End
-    NewMarketNotif --> End
-    
-    style ConnectWS fill:#9b87f5
-    style OnBet fill:#7c3aed
-    style OnResolve fill:#a78bfa
-    style UpdateUI1 fill:#9b87f5
+    style Provider fill:#9b87f5
+    style Polling fill:#7c3aed
+    style Dedupe fill:#a78bfa
 ```
 
 ## 🔐 Authentication & Authorization Flow
@@ -290,7 +288,7 @@ graph TD
     MarketCard --> Card
 ```
 
-## 🔄 Real-time Data Flow with Somnia Streams
+## 🔄 Real-time Data Flow
 
 ```mermaid
 sequenceDiagram
@@ -298,40 +296,30 @@ sequenceDiagram
     participant Frontend1
     participant User2
     participant Frontend2
-    participant StreamsSDK
     participant Contract
     participant Supabase
     
-    Note over Frontend1,Frontend2: Both users subscribe to market streams
-    Frontend1->>StreamsSDK: Subscribe to Market Events
-    Frontend2->>StreamsSDK: Subscribe to Market Events
-    StreamsSDK-->>Frontend1: WebSocket Connected
-    StreamsSDK-->>Frontend2: WebSocket Connected
+    Note over Frontend1,Frontend2: Both frontends poll blockchain every 3s
     
     User1->>Frontend1: Place Bet
     Frontend1->>Contract: Submit Transaction
     Contract->>Contract: Emit BetPlaced Event
     Contract-->>Frontend1: Transaction Confirmed
     
-    Contract->>StreamsSDK: Event Broadcast
-    StreamsSDK-->>Frontend1: Real-time Event
-    StreamsSDK-->>Frontend2: Real-time Event
-    
-    Frontend1->>Frontend1: Update UI Instantly
-    Frontend2->>Frontend2: Update UI Instantly
-    
     Frontend1->>Supabase: Record Bet Activity
     Supabase-->>Frontend1: Activity Saved
     
-    Note over Frontend1,Frontend2: No polling needed - instant updates via WebSocket
+    Note over Frontend2: Polling detects new event
+    Frontend2->>Contract: getContractEvents
+    Contract-->>Frontend2: New BetPlaced Event
     
-    User2->>Frontend2: Add Comment
-    Frontend2->>Supabase: Save Comment
-    Supabase-->>Frontend2: Comment Saved
+    Frontend2->>Contract: getMarket (fetch details)
+    Contract-->>Frontend2: Market Data
     
-    Frontend1->>Supabase: Fetch Comments
-    Supabase-->>Frontend1: New Comment
-    Frontend1->>User1: Update Comments
+    Frontend2->>Frontend2: Show Notification
+    Frontend2->>Frontend2: Update UI
+    
+    Note over Frontend1,Frontend2: 3-5 second delay for cross-user updates
 ```
 
 ## 🎨 UI State Management
@@ -401,55 +389,54 @@ graph TB
     style MainNet fill:#ff9999
 ```
 
-## 🎯 Somnia Streams Integration Architecture
+## 🎯 Event Monitoring Architecture
 
 ```mermaid
-graph LR
-    subgraph "React Components"
-        MarketDetail[Market Detail Page]
+graph TB
+    subgraph "React Layer"
+        Components[UI Components]
         LiveFeed[Live Activity Feed]
-        LiveStats[Live Stats Component]
+        LiveStats[Live Stats]
     end
     
-    subgraph "Custom Hooks"
-        useMarketStream[useMarketStream Hook]
-        useLiveNotif[useLiveNotifications Hook]
+    subgraph "Hook Layer"
+        useMarketStream[useMarketStream]
+        useBetStats[useBetStats]
     end
     
-    subgraph "Somnia Streams SDK"
-        Provider[SomniaStreamsProvider]
-        SDK[Streams SDK Instance]
-        Subscription[Event Subscription]
+    subgraph "Provider Layer"
+        StreamsProvider[SomniaStreamsProvider]
+        PublicClient[viem publicClient]
     end
     
-    subgraph "Blockchain Events"
-        BetPlaced[BetPlaced Event]
-        MarketResolved[MarketResolved Event]
-        MarketCreated[MarketCreated Event]
+    subgraph "Blockchain"
+        Contract[PredictionMarket Contract]
+        Events[Contract Events]
     end
     
-    MarketDetail --> LiveFeed
-    MarketDetail --> LiveStats
+    subgraph "Database"
+        Supabase[(Supabase)]
+        BetActivities[bet_activities]
+    end
+    
+    Components --> useMarketStream
     LiveFeed --> useMarketStream
-    LiveStats --> useMarketStream
-    useLiveNotif --> useMarketStream
+    LiveStats --> useBetStats
     
-    useMarketStream --> Provider
-    Provider --> SDK
-    SDK --> Subscription
+    useMarketStream --> StreamsProvider
+    useBetStats --> Supabase
     
-    Subscription -.WebSocket.-> BetPlaced
-    Subscription -.WebSocket.-> MarketResolved
-    Subscription -.WebSocket.-> MarketCreated
+    StreamsProvider --> PublicClient
+    PublicClient --> Contract
     
-    BetPlaced -.Callback.-> useMarketStream
-    MarketResolved -.Callback.-> useMarketStream
-    MarketCreated -.Callback.-> useMarketStream
+    Contract --> Events
+    Events -.polling.-> PublicClient
     
-    style Provider fill:#9b87f5
-    style SDK fill:#7c3aed
-    style Subscription fill:#a78bfa
-    style useMarketStream fill:#9b87f5
+    Supabase --> BetActivities
+    
+    style StreamsProvider fill:#9b87f5
+    style useMarketStream fill:#7c3aed
+    style PublicClient fill:#a78bfa
 ```
 
 ---

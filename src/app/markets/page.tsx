@@ -8,6 +8,7 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { usePredictionContractRead } from "@/hooks/use-prediction-contract";
+import { useBetStats } from "@/hooks/use-bet-stats";
 import { Market } from "@/types/market";
 import {
   DollarSign,
@@ -24,6 +25,7 @@ export default function MarketsPage() {
 
   // Use contract hooks for real data
   const { activeMarkets, allMarkets, activeMarketsLoading, allMarketsLoading, refetchActiveMarkets, refetchAllMarkets } = usePredictionContractRead();
+  const { stats: betStats, isLoading: betStatsLoading } = useBetStats();
 
   const loading = activeMarketsLoading || allMarketsLoading;
   const error = null;
@@ -123,13 +125,13 @@ export default function MarketsPage() {
                   <Users className="h-5 w-5 text-[#9b87f5]" />
                 </div>
                 <span className="text-sm font-medium text-gray-400">
-                  Total Users
+                  Total Bets
                 </span>
               </div>
               <p className="text-3xl font-bold text-white">
-                {new Set(markets.map(m => m.creator)).size}
+                {betStats.totalBets}
               </p>
-              <p className="text-xs text-gray-500 mt-1">Registered traders</p>
+              <p className="text-xs text-gray-500 mt-1">{betStats.uniqueTraders} unique traders</p>
             </div>
 
             <div className="bg-gradient-to-br from-[#1A1F2C] to-[#151923] rounded-xl p-6 border border-gray-800/50 shadow-xl backdrop-blur-sm">

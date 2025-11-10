@@ -51,19 +51,30 @@ export function useMarketStream(options: UseMarketStreamOptions = {}) {
 
     setEvents(prev => [event, ...prev].slice(0, 50)); // Keep last 50 events
 
-    // Call specific handlers
+    // Call specific handlers and show notifications
     switch (eventType) {
       case 'BET_PLACED':
         options.onBetPlaced?.(data);
+        const amount = data.amount ? (Number(data.amount) / 1e18).toFixed(2) : '?';
+        const outcome = data.outcome === 0 ? 'Yes' : 'No';
+        toast.success(`New bet: ${amount} STT on ${outcome}`, {
+          description: 'A new prediction was just placed!',
+        });
         console.log('🎯 New bet placed:', data);
         break;
       case 'MARKET_RESOLVED':
         options.onMarketResolved?.(data);
-        toast.success('Market resolved!');
+        const winner = data.winningOutcome === 0 ? 'Yes' : 'No';
+        toast.success(`Market Resolved!`, {
+          description: `Winner: ${winner}`,
+        });
         console.log('⚖️ Market resolved:', data);
         break;
       case 'MARKET_CREATED':
         options.onMarketCreated?.(data);
+        toast.info('New Market Created!', {
+          description: 'A new prediction market is now available',
+        });
         console.log('🆕 New market created:', data);
         break;
     }

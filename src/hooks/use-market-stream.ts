@@ -18,25 +18,27 @@ interface UseMarketStreamOptions {
   onMarketCreated?: (data: any) => void;
 }
 
+// Global set to track processed events across all hook instances
+const globalProcessedEventIds = new Set<string>();
+
 export function useMarketStream(options: UseMarketStreamOptions = {}) {
   const { publicClient, isConnected } = useSomniaStreams();
   const [events, setEvents] = useState<MarketEvent[]>([]);
   const [isStreaming, setIsStreaming] = useState(false);
   const [isLoadingHistory, setIsLoadingHistory] = useState(false);
-  const processedEventIdsRef = useRef<Set<string>>(new Set());
 
   const handleEvent = useCallback((eventType: MarketEvent['type'], data: any, blockNumber?: bigint, logIndex?: number) => {
     // Create unique ID from block number, log index, and event data
     const eventId = `${blockNumber}-${logIndex}-${eventType}-${data.marketId?.toString() || ''}-${data.user?.toString() || ''}`;
     
-    // Check if we've already processed this event
-    if (processedEventIdsRef.current.has(eventId)) {
+    // Check if we've already processed this event (BEFORE showing notification)
+    if (globalProcessedEventIds.has(eventId)) {
       console.log('⏭️ Skipping duplicate event:', eventId);
       return;
     }
 
     // Mark as processed
-    processedEventIdsRef.current.add(eventId);
+    globalProcessedEventIds.add(eventId);
 
     // Use blockchain timestamp if available (BetPlaced has timestamp field)
     const timestamp = data.timestamp ? Number(data.timestamp) * 1000 : Date.now();
@@ -51,30 +53,30 @@ export function useMarketStream(options: UseMarketStreamOptions = {}) {
 
     setEvents(prev => [event, ...prev].slice(0, 50)); // Keep last 50 events
 
-    // Call specific handlers and show notifications
+    // Call specific handlers and show notifications (AFTER duplicate check)
     switch (eventType) {
       case 'BET_PLACED':
-        options.onBetPlaced?.(data);
         const amount = data.amount ? (Number(data.amount) / 1e18).toFixed(2) : '?';
         const outcome = data.outcome === 0 ? 'Yes' : 'No';
         toast.success(`New bet: ${amount} STT on ${outcome}`, {
           description: 'A new prediction was just placed!',
         });
+        options.onBetPlaced?.(data);
         console.log('🎯 New bet placed:', data);
         break;
       case 'MARKET_RESOLVED':
-        options.onMarketResolved?.(data);
         const winner = data.winningOutcome === 0 ? 'Yes' : 'No';
         toast.success(`Market Resolved!`, {
           description: `Winner: ${winner}`,
         });
+        options.onMarketResolved?.(data);
         console.log('⚖️ Market resolved:', data);
         break;
       case 'MARKET_CREATED':
-        options.onMarketCreated?.(data);
         toast.info('New Market Created!', {
           description: 'A new prediction market is now available',
         });
+        options.onMarketCreated?.(data);
         console.log('🆕 New market created:', data);
         break;
     }
@@ -174,7 +176,7 @@ export function useMarketStream(options: UseMarketStreamOptions = {}) {
 
       allBetPlacedLogs.forEach((log: any) => {
         const eventId = `${log.blockNumber}-${log.logIndex}-BET_PLACED-${log.args.marketId?.toString() || ''}-${log.args.user?.toString() || ''}`;
-        if (!processedEventIdsRef.current.has(eventId)) {
+        if (!globalProcessedEventIds.has(eventId)) {
           // Use block timestamp for accurate time
           const timestamp = blockTimestamps.get(log.blockNumber) || Date.now();
           historicalEvents.push({
@@ -184,13 +186,13 @@ export function useMarketStream(options: UseMarketStreamOptions = {}) {
             data: log.args,
             timestamp,
           });
-          processedEventIdsRef.current.add(eventId);
+          globalProcessedEventIds.add(eventId);
         }
       });
 
       allMarketResolvedLogs.forEach((log: any) => {
         const eventId = `${log.blockNumber}-${log.logIndex}-MARKET_RESOLVED-${log.args.marketId?.toString() || ''}`;
-        if (!processedEventIdsRef.current.has(eventId)) {
+        if (!globalProcessedEventIds.has(eventId)) {
           // MarketResolved doesn't have timestamp in event, use current time
           historicalEvents.push({
             id: eventId,
@@ -199,13 +201,13 @@ export function useMarketStream(options: UseMarketStreamOptions = {}) {
             data: log.args,
             timestamp: Date.now(),
           });
-          processedEventIdsRef.current.add(eventId);
+          globalProcessedEventIds.add(eventId);
         }
       });
 
       allMarketCreatedLogs.forEach((log: any) => {
         const eventId = `${log.blockNumber}-${log.logIndex}-MARKET_CREATED-${log.args.marketId?.toString() || ''}`;
-        if (!processedEventIdsRef.current.has(eventId)) {
+        if (!globalProcessedEventIds.has(eventId)) {
           // MarketCreated doesn't have timestamp in event, use current time
           historicalEvents.push({
             id: eventId,
@@ -214,7 +216,7 @@ export function useMarketStream(options: UseMarketStreamOptions = {}) {
             data: log.args,
             timestamp: Date.now(),
           });
-          processedEventIdsRef.current.add(eventId);
+          globalProcessedEventIds.add(eventId);
         }
       });
 
@@ -236,26 +238,55 @@ export function useMarketStream(options: UseMarketStreamOptions = {}) {
 
     const unwatchFunctions: (() => void)[] = [];
 
-    const setupStream = () => {
+    const setupStream = async () => {
       try {
         setIsStreaming(true);
         console.log('🔴 Starting market stream for contract:', PREDICTION_MARKET_ADDRESS);
 
-        // Now watch for new events
-        // Watch BetPlaced events
-        const unwatchBetPlaced = publicClient.watchContractEvent({
-          address: PREDICTION_MARKET_ADDRESS,
-          abi: PREDICTION_MARKET_ABI,
-          eventName: 'BetPlaced',
-          onLogs: (logs: any[]) => {
-            logs.forEach((log: any) => {
-              console.log('🎯 BetPlaced event detected!', log);
-              handleEvent('BET_PLACED', log.args, log.blockNumber, log.logIndex);
-            });
-          },
-          pollingInterval: 2000, // Increased to 2 seconds to reduce duplicate checks
-        });
-        unwatchFunctions.push(unwatchBetPlaced);
+        let lastCheckedBlock = await publicClient.getBlockNumber();
+        console.log('📍 Starting from block:', lastCheckedBlock.toString());
+
+        // Manual polling: Check for new events every 3 seconds
+        const pollInterval = setInterval(async () => {
+          try {
+            const currentBlock = await publicClient.getBlockNumber();
+            
+            if (currentBlock > lastCheckedBlock) {
+              console.log('🔍 Checking blocks', lastCheckedBlock.toString(), 'to', currentBlock.toString());
+              
+              // Get new BetPlaced events
+              const newBets = await publicClient.getContractEvents({
+                address: PREDICTION_MARKET_ADDRESS,
+                abi: PREDICTION_MARKET_ABI,
+                eventName: 'BetPlaced',
+                fromBlock: lastCheckedBlock + BigInt(1),
+                toBlock: currentBlock,
+              });
+
+              if (newBets.length > 0) {
+                console.log('🎯 Found', newBets.length, 'new bet(s)!');
+                
+                // Get block timestamps
+                for (const log of newBets) {
+                  try {
+                    const block = await publicClient.getBlock({ blockNumber: log.blockNumber });
+                    const timestamp = Number(block.timestamp) * 1000;
+                    handleEvent('BET_PLACED', log.args, log.blockNumber, log.logIndex);
+                  } catch (error) {
+                    console.error('Error processing bet:', error);
+                  }
+                }
+              }
+
+              lastCheckedBlock = currentBlock;
+            }
+          } catch (error) {
+            console.error('❌ Polling error:', error);
+          }
+        }, 3000); // Check every 3 seconds
+
+        unwatchFunctions.push(() => clearInterval(pollInterval));
+        console.log('✅ Manual polling started (every 3 seconds)');
 
         // Watch MarketResolved events
         const unwatchMarketResolved = publicClient.watchContractEvent({

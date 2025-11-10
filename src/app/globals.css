@@ -149,3 +149,32 @@
   background-size: 200% 200%;
   animation: gradient-shift 8s ease-in-out infinite;
 }
+
+/* Modern Scrollbar Styles */
+* {
+  scrollbar-width: thin;
+  scrollbar-color: rgba(155, 135, 245, 0.3) transparent;
+}
+
+*::-webkit-scrollbar {
+  width: 6px;
+  height: 6px;
+}
+
+*::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+*::-webkit-scrollbar-thumb {
+  background: rgba(155, 135, 245, 0.3);
+  border-radius: 3px;
+  transition: background 0.2s ease;
+}
+
+*::-webkit-scrollbar-thumb:hover {
+  background: rgba(155, 135, 245, 0.5);
+}
+
+*::-webkit-scrollbar-thumb:active {
+  background: rgba(155, 135, 245, 0.7);
+}

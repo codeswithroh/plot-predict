@@ -66,10 +66,15 @@ export function useMarketStream(options: UseMarketStreamOptions = {}) {
           }
           if (marketData.optionA) {
             optionA = marketData.optionA;
+            console.log('✅ OptionA:', optionA);
           }
           if (marketData.optionB) {
             optionB = marketData.optionB;
+            console.log('✅ OptionB:', optionB);
           }
+          // BetPlaced event uses 'option' field, MarketResolved uses 'outcome'
+          const selectedOption = data.option !== undefined ? data.option : data.outcome;
+          console.log('📊 Event option:', selectedOption, '-> Selected:', selectedOption === 0 ? optionA : optionB);
         }
       }
     } catch (error) {
@@ -100,7 +105,8 @@ export function useMarketStream(options: UseMarketStreamOptions = {}) {
     switch (eventType) {
       case 'BET_PLACED':
         const amount = data.amount ? (Number(data.amount) / 1e18).toFixed(2) : '?';
-        const selectedOption = data.outcome === 0 ? optionA : optionB;
+        // BetPlaced event uses 'option' field
+        const selectedOption = (data.option !== undefined ? data.option : data.outcome) === 0 ? optionA : optionB;
         
         toast.success(`New bet: ${amount} STT on ${selectedOption}`, {
           description: marketTitle,

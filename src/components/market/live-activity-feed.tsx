@@ -96,7 +96,9 @@ export const LiveActivityFeed: React.FC<LiveActivityFeedProps> = ({
               {events.map((event) => {
                 // Extract event details
                 const amount = event.data?.amount ? (Number(event.data.amount) / 1e18).toFixed(2) : '?';
-                const outcome = event.data?.outcome === 0 ? 'Yes' : 'No';
+                const optionA = event.data?.optionA || 'Yes';
+                const optionB = event.data?.optionB || 'No';
+                const outcome = event.data?.outcome === 0 ? optionA : optionB;
                 const user = event.data?.user ? `${event.data.user.slice(0, 6)}...${event.data.user.slice(-4)}` : 'Unknown';
                 const marketTitleText = event.data?.marketTitle || `Market #${event.marketId}`;
                 

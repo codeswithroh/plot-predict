@@ -44,9 +44,12 @@ export function useMarketStream(options: UseMarketStreamOptions = {}) {
 
     // Fetch market details first
     let marketTitle = `Market #${data.marketId?.toString()}`;
+    let optionA = 'Option A';
+    let optionB = 'Option B';
+    
     try {
       if (publicClient && data.marketId) {
-        console.log('🔍 Fetching market title for:', data.marketId?.toString());
+        console.log('🔍 Fetching market details for:', data.marketId?.toString());
         const marketData = await publicClient.readContract({
           address: PREDICTION_MARKET_ADDRESS,
           abi: PREDICTION_MARKET_ABI,
@@ -56,15 +59,21 @@ export function useMarketStream(options: UseMarketStreamOptions = {}) {
         
         console.log('📊 Market data received:', marketData);
         
-        if (marketData && marketData.title) {
-          marketTitle = marketData.title;
-          console.log('✅ Market title set to:', marketTitle);
-        } else {
-          console.log('⚠️ No title in market data');
+        if (marketData) {
+          if (marketData.title) {
+            marketTitle = marketData.title;
+            console.log('✅ Market title set to:', marketTitle);
+          }
+          if (marketData.optionA) {
+            optionA = marketData.optionA;
+          }
+          if (marketData.optionB) {
+            optionB = marketData.optionB;
+          }
         }
       }
     } catch (error) {
-      console.error('❌ Failed to fetch market title:', error);
+      console.error('❌ Failed to fetch market details:', error);
     }
 
     // Use blockchain timestamp if available (BetPlaced has timestamp field)
@@ -76,7 +85,9 @@ export function useMarketStream(options: UseMarketStreamOptions = {}) {
       marketId: data.marketId?.toString() || options.marketId || 'all',
       data: {
         ...data,
-        marketTitle, // Add market title to event data
+        marketTitle,
+        optionA,
+        optionB,
       },
       timestamp,
     };
@@ -89,9 +100,9 @@ export function useMarketStream(options: UseMarketStreamOptions = {}) {
     switch (eventType) {
       case 'BET_PLACED':
         const amount = data.amount ? (Number(data.amount) / 1e18).toFixed(2) : '?';
-        const outcome = data.outcome === 0 ? 'Yes' : 'No';
+        const selectedOption = data.outcome === 0 ? optionA : optionB;
         
-        toast.success(`New bet: ${amount} STT on ${outcome}`, {
+        toast.success(`New bet: ${amount} STT on ${selectedOption}`, {
           description: marketTitle,
         });
         options.onBetPlaced?.(data);

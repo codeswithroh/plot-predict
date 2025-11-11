@@ -9,7 +9,6 @@ artifacts
 !.yarn/plugins
 !.yarn/releases
 !.yarn/versions
-somnia-streams
 # testing
 /coverage
 

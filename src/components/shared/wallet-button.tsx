@@ -110,39 +110,14 @@ export function WalletButton() {
                   <span className="font-medium">Markets</span>
                 </Link>
 
-                {isConnected && (
-                  <Link
-                    href="/dashboard/create"
-                    onClick={handleMobileNavLinkClick}
-                    className="flex items-center space-x-3 px-3 py-2 rounded-lg transition-colors hover:bg-[#2a2d3a]"
-                  >
-                    <PlusCircle
-                      className="h-5 w-5"
-                      style={{ color: "#9b87f5" }}
-                    />
-                    <span className="font-medium">Create Market</span>
-                  </Link>
-                )}
-
                 <Link
-                  href="/leaderboard"
+                  href="/dashboard/my-bets"
                   onClick={handleMobileNavLinkClick}
                   className="flex items-center space-x-3 px-3 py-2 rounded-lg transition-colors hover:bg-[#2a2d3a]"
                 >
-                  <Trophy className="h-5 w-5" style={{ color: "#9b87f5" }} />
-                  <span className="font-medium">Leaderboard</span>
+                  <Wallet className="h-5 w-5" style={{ color: "#9b87f5" }} />
+                  <span className="font-medium">My Bets</span>
                 </Link>
-
-                {isConnected && address && (
-                  <Link
-                    href={`/dashboard/${address}`}
-                    onClick={handleMobileNavLinkClick}
-                    className="flex items-center space-x-3 px-3 py-2 rounded-lg transition-colors hover:bg-[#2a2d3a]"
-                  >
-                    <User className="h-5 w-5" style={{ color: "#9b87f5" }} />
-                    <span className="font-medium">My Dashboard</span>
-                  </Link>
-                )}
               </div>
 
               {/* Secondary Navigation */}

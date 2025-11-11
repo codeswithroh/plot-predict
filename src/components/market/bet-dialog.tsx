@@ -365,13 +365,30 @@ export const BetDialog: React.FC<BetDialogProps> = ({
         if (!open) {
           setShowSuccess(false);
           setSuccessData(null);
+          onOpenChange(false);
+          if (onSuccess) {
+            onSuccess();
+          }
         }
       }}>
-        <DialogContent className="bg-gradient-to-br from-[#1A1F2C] to-[#151923] border-gray-800/50 text-white max-w-md">
+        <DialogContent 
+          className="bg-gradient-to-br from-[#1A1F2C] to-[#151923] border-gray-800/50 text-white max-w-md max-h-[90vh] overflow-y-auto"
+          onInteractOutside={(e) => {
+            // Allow closing by clicking outside
+            setShowSuccess(false);
+            setSuccessData(null);
+            onOpenChange(false);
+            if (onSuccess) {
+              onSuccess();
+            }
+          }}
+        >
           <DialogHeader>
-            <DialogTitle className="text-xl font-bold flex items-center space-x-2 text-purple-400">
-              <CheckCircle className="h-6 w-6" />
-              <span>Bet Placed Successfully!</span>
+            <DialogTitle className="text-xl font-bold flex items-center justify-between text-purple-400">
+              <div className="flex items-center space-x-2">
+                <CheckCircle className="h-6 w-6" />
+                <span>Bet Placed Successfully!</span>
+              </div>
             </DialogTitle>
           </DialogHeader>
           

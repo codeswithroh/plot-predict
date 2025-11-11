@@ -1,4 +1,4 @@
-﻿"use client";
+"use client";
 
 import Link from "next/link";
 import { WalletButton } from "./wallet-button";
@@ -11,42 +11,40 @@ export function Header() {
           {/* Subtle animated overlay */}
           <div className="absolute inset-0 bg-gradient-to-r from-[#9b87f5]/5 via-transparent to-[#7c3aed]/5 animate-gradient opacity-50"></div>
           <div className="relative z-10 flex items-center justify-between gap-2 sm:gap-4">
-            <div className="flex items-center space-x-2 sm:space-x-8 flex-1 min-w-0">
-              {/* Logo */}
-              <Link href="/" className="flex items-center gap-2 flex-shrink-0">
-                {/* Text Only */}
-                <div className="text-lg sm:text-3xl font-black tracking-tight">
-                  <span className="bg-gradient-to-r from-[#a78bfa] via-[#9b87f5] to-[#7c3aed] bg-clip-text text-transparent">
-                    Somnia
-                  </span>
-                  <span className="text-white">Predict</span>
-                </div>
+            {/* Logo */}
+            <Link href="/" className="flex items-center gap-2 flex-shrink-0">
+              <div className="text-base sm:text-3xl font-black tracking-tight whitespace-nowrap">
+                <span className="bg-gradient-to-r from-[#a78bfa] via-[#9b87f5] to-[#7c3aed] bg-clip-text text-transparent">
+                  Somnia
+                </span>
+                <span className="text-white">Predict</span>
+              </div>
+            </Link>
+            
+            {/* Navigation Links - Desktop */}
+            <nav className="hidden md:flex items-center space-x-6 flex-1">
+              <Link 
+                href="/markets" 
+                className="text-gray-300 hover:text-white transition-colors text-sm font-medium"
+              >
+                Markets
               </Link>
-              
-              {/* Navigation Links */}
-              <nav className="hidden md:flex items-center space-x-6">
-                <Link 
-                  href="/markets" 
-                  className="text-gray-300 hover:text-white transition-colors text-sm font-medium"
-                >
-                  Markets
-                </Link>
-                <Link 
-                  href="/dashboard/my-bets" 
-                  className="text-gray-300 hover:text-white transition-colors text-sm font-medium"
-                >
-                  My Bets
-                </Link>
-                <Link 
-                  href="/learn" 
-                  className="text-gray-300 hover:text-white transition-colors text-sm font-medium"
-                >
-                  Learn
-                </Link>
-              </nav>
-            </div>
+              <Link 
+                href="/dashboard/my-bets" 
+                className="text-gray-300 hover:text-white transition-colors text-sm font-medium"
+              >
+                My Bets
+              </Link>
+              <Link 
+                href="/learn" 
+                className="text-gray-300 hover:text-white transition-colors text-sm font-medium"
+              >
+                Learn
+              </Link>
+            </nav>
+            
             {/* Wallet Button */}
-            <div className="flex-shrink-0">
+            <div className="flex-shrink-0 ml-auto">
               <WalletButton />
             </div>
           </div>

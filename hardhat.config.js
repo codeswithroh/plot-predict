@@ -20,5 +20,10 @@ module.exports = {
       accounts: process.env.PRIVATE_KEY ? [process.env.PRIVATE_KEY] : [],
       gasLimit: 4500934,
     },
+    monad_testnet: {
+      url: process.env.NEXT_PUBLIC_RPC_URL || "",
+      chainId: process.env.NEXT_PUBLIC_MONAD_CHAIN_ID ? Number(process.env.NEXT_PUBLIC_MONAD_CHAIN_ID) : undefined,
+      accounts: process.env.NEXT_PUBLIC_ADMIN_KEY ? [process.env.NEXT_PUBLIC_ADMIN_KEY] : [],
+    },
   },
 };

@@ -1,4 +1,4 @@
-﻿import React from 'react';
+import React from 'react';
 import { useUserBets } from '@/hooks/use-user-bets';
 import { Badge } from '@/components/ui/badge';
 import { Card, CardContent } from '@/components/ui/card';
@@ -81,7 +81,7 @@ export const MyBets: React.FC<MyBetsProps> = ({
           <Card className="bg-gradient-to-r from-[#1A1F2C] to-[#151923] border-gray-800/50">
             <CardContent className="p-4 text-center">
               <div className="text-2xl font-bold text-white">{stats.totalAmount.toFixed(2)}</div>
-              <div className="text-xs text-gray-400">Total STT</div>
+              <div className="text-xs text-gray-400">Total MON</div>
             </CardContent>
           </Card>
           
@@ -165,7 +165,7 @@ export const MyBets: React.FC<MyBetsProps> = ({
                       
                       <div className="flex items-center space-x-2 mb-1">
                         <span className="text-[#9b87f5] font-bold">
-                          {bet.amount} STT
+                          {bet.amount} MON
                         </span>
                         <span className="text-gray-400 text-sm">on</span>
                         <Badge className={`text-xs ${

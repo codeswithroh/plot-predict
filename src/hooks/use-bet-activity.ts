@@ -1,5 +1,6 @@
-﻿import { useState, useEffect } from 'react'
-import { supabase, BetActivity } from '@/lib/supabase'
+import { useState, useEffect } from 'react'
+import type { BetActivity } from '@/lib/supabase'
+import { getActivities, addActivity as mockAddActivity } from '@/lib/mock/activity'
 import { toast } from 'sonner'
 
 export const useBetActivity = (marketId?: string) => {
@@ -12,23 +13,8 @@ export const useBetActivity = (marketId?: string) => {
     try {
       setIsLoading(true)
       setError(null)
-
-      let query = supabase
-        .from('bet_activities')
-        .select('*')
-        .order('created_at', { ascending: false })
-
-      if (marketId) {
-        query = query.eq('market_id', marketId)
-      }
-
-      const { data, error } = await query.limit(50)
-
-      if (error) {
-        throw error
-      }
-
-      setActivities(data || [])
+      const data = await getActivities(marketId)
+      setActivities((data as any) || [])
     } catch (err: any) {
       console.error('Error fetching bet activities:', err)
       setError(err.message)
@@ -40,19 +26,9 @@ export const useBetActivity = (marketId?: string) => {
   // Add new bet activity
   const addBetActivity = async (activity: Omit<BetActivity, 'id' | 'created_at'>) => {
     try {
-      const { data, error } = await supabase
-        .from('bet_activities')
-        .insert([activity])
-        .select()
-        .single()
-
-      if (error) {
-        throw error
-      }
-
-      // Add to local state
-      setActivities(prev => [data, ...prev])
-      return data
+      const data = await mockAddActivity(activity as any)
+      setActivities(prev => [data as any, ...prev])
+      return data as any
     } catch (err: any) {
       console.error('Error adding bet activity:', err)
       toast.error('Failed to record bet activity')

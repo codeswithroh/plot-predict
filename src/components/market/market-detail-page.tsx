@@ -1,4 +1,4 @@
-﻿"use client";
+"use client";
 
 import { BetDialog } from "@/components/market/bet-dialog";
 import { CommentsSection } from "@/components/comments/comments-section";
@@ -9,6 +9,7 @@ import { MarketActivity } from "@/components/market/market-activity";
 import { MyBets } from "@/components/market/my-bets";
 import { LiveActivityFeed } from "@/components/market/live-activity-feed";
 import { LiveStats } from "@/components/market/live-stats";
+import { getBetCount } from "@/lib/mock/bets";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
@@ -59,34 +60,18 @@ export default function MarketDetailPage() {
   const [isBookmarked, setIsBookmarked] = useState(false);
   const [imageError, setImageError] = useState(false);
 
-  // Fetch bet count from Supabase
+  // Fetch bet count from mock service
   useEffect(() => {
-    const fetchBetCount = async () => {
+    const run = async () => {
       if (!marketId) return;
-      
       try {
-        const { supabase } = await import('@/lib/supabase');
-        console.log('📊 Fetching bet count for market:', marketId);
-        
-        const { count, error } = await supabase
-          .from('bet_activities')
-          .select('*', { count: 'exact', head: true })
-          .eq('market_id', marketId);
-        
-        console.log('📊 Bet count result:', { count, error });
-        
-        if (!error && count !== null) {
-          console.log('✅ Setting bet count to:', count);
-          setBetCount(count);
-        } else if (error) {
-          console.error('❌ Error fetching bet count:', error);
-        }
-      } catch (error) {
-        console.error('❌ Failed to fetch bet count:', error);
+        const count = await getBetCount(marketId);
+        setBetCount(count);
+      } catch (e) {
+        // ignore mock failures
       }
     };
-    
-    fetchBetCount();
+    run();
   }, [marketId]);
 
   // Auto-refresh market data every 30 seconds
@@ -320,7 +305,7 @@ export default function MarketDetailPage() {
 
             <div className="flex items-center space-x-2">
               <DollarSign className="h-4 w-4 text-purple-400" />
-              <span>{formatCurrency(market.totalPool)} STT volume</span>
+              <span>{formatCurrency(market.totalPool)} MON volume</span>
             </div>
 
             {/* Live Stats */}
@@ -396,7 +381,7 @@ export default function MarketDetailPage() {
                       </div>
                       <div className="text-center">
                         <div className="text-white font-bold text-lg">
-                          {formatCurrency(userPosition.totalInvested)} STT
+                          {formatCurrency(userPosition.totalInvested)} MON
                         </div>
                         <div className="text-gray-500 text-xs">Total invested</div>
                       </div>

@@ -1,5 +1,6 @@
-﻿import { useState, useEffect } from 'react'
-import { supabase, BetActivity } from '@/lib/supabase'
+import { useState, useEffect } from 'react'
+import type { BetActivity } from '@/lib/supabase'
+import { getUserActivities } from '@/lib/mock/activity'
 import { toast } from 'sonner'
 
 export const useUserBets = (userAddress?: string) => {
@@ -17,18 +18,8 @@ export const useUserBets = (userAddress?: string) => {
         try {
             setIsLoading(true)
             setError(null)
-
-            const { data, error } = await supabase
-                .from('bet_activities')
-                .select('*')
-                .eq('user_address', userAddress)
-                .order('created_at', { ascending: false })
-
-            if (error) {
-                throw error
-            }
-
-            setUserBets(data || [])
+            const data = await getUserActivities(userAddress)
+            setUserBets((data as any) || [])
         } catch (err: any) {
             console.error('Error fetching user bets:', err)
             setError(err.message)

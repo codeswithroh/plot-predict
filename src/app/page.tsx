@@ -1,4 +1,4 @@
-﻿/* eslint-disable @typescript-eslint/no-unused-vars */
+/* eslint-disable @typescript-eslint/no-unused-vars */
 "use client";
 
 import { MarketCard } from "@/components/market/market-card";
@@ -63,29 +63,43 @@ export default function HomePage() {
 
     console.log("This is the Featured Markets", featuredMarkets);
 
+    const heroVideoId = process.env.NEXT_PUBLIC_HEADER_BG_YT_ID || "a3ICNMQW7Ok";
     return (
         <div className="min-h-screen">
-            {/* Hero Section - Banner Style */}
-            <section className="w-full h-[500px] relative overflow-hidden">
-                {/* Background Pattern */}
-                <div className="absolute inset-0 opacity-5">
-                    <div
-                        className="absolute inset-0"
-                        style={{
-                            backgroundImage: `url("data:image/svg+xml,%3Csvg width='60' height='60' viewBox='0 0 60 60' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='none' fillRule='evenodd'%3E%3Cg fill='%239b87f5' fillOpacity='0.4'%3E%3Ccircle cx='7' cy='7' r='1'/%3E%3C/g%3E%3C/g%3E%3C/svg%3E")`,
-                            backgroundRepeat: "repeat",
-                        }}
-                    ></div>
+            {/* Hero Section - Full Screen */}
+            <section className="w-full h-screen relative overflow-hidden">
+                {/* Background Video */}
+                <div className="absolute inset-0 z-0 pointer-events-none">
+                    <iframe
+                        title="hero-bg-video"
+                        src={`https://www.youtube.com/embed/${heroVideoId}?autoplay=1&mute=1&controls=0&loop=1&playlist=${heroVideoId}&modestbranding=1&playsinline=1&rel=0&showinfo=0`}
+                        allow="autoplay; fullscreen; picture-in-picture"
+                        className="w-full h-full"
+                    />
                 </div>
+                {/* Dark overlay above video */}
+                <div className="absolute inset-0 z-10 bg-gradient-to-b from-[#0A0C14]/70 via-[#0A0C14]/60 to-[#0A0C14]/80" />
 
-                {/* Hero Content */}
-                <div className="relative z-10 h-full flex items-center justify-center px-4">
-                    <div className="text-center max-w-4xl mx-auto">
+                {/* Foreground (pattern + content + decorations) */}
+                <div className="relative z-20 h-full">
+                    {/* Background Pattern */}
+                    <div className="absolute inset-0 opacity-5">
+                        <div
+                            className="absolute inset-0"
+                            style={{
+                                backgroundImage: `url("data:image/svg+xml,%3Csvg width='60' height='60' viewBox='0 0 60 60' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='none' fillRule='evenodd'%3E%3Cg fill='%239b87f5' fillOpacity='0.4'%3E%3Ccircle cx='7' cy='7' r='1'/%3E%3C/g%3E%3C/g%3E%3C/svg%3E")`,
+                                backgroundRepeat: "repeat",
+                            }}
+                        ></div>
+                    </div>
+                
+
+                    {/* Hero Content */}
+                    <div className="relative h-full flex items-center justify-center px-4">
+                        <div className="text-center max-w-4xl mx-auto">
                         {/* Main Heading */}
                         <h1 className="text-4xl md:text-6xl font-bold text-white mb-10">
-                            <span className="inline-block animate-pull-up" style={{ animationDelay: "0ms", animationDuration: "2s" }}>Where</span>{" "}
-                            <span className="inline-block animate-pull-up text-[#9b87f5]" style={{ animationDelay: "500ms", animationDuration: "2s" }}>Dreams</span>{" "}
-                            <span className="inline-block animate-pull-up" style={{ animationDelay: "1000ms", animationDuration: "2s" }}>Meet Reality.</span>
+                            <span className="inline-block animate-pull-up" style={{ animationDelay: "0ms", animationDuration: "1.5s" }}>Where Fans Price the Plot</span>
                         </h1>
 
                         {/* Subheading removed per request */}
@@ -137,6 +151,7 @@ export default function HomePage() {
 
                 {/* Bottom Gradient Fade */}
                 <div className="absolute bottom-0 left-0 right-0 h-20 bg-gradient-to-t from-[#0A0C14] to-transparent"></div>
+                </div>
             </section>
 
             {/* Platform Stats */}
@@ -177,7 +192,7 @@ export default function HomePage() {
                                 <div className="p-2 rounded-lg bg-[#9b87f5]/15">
                                     <Coins className="h-5 w-5 text-[#9b87f5]" />
                                 </div>
-                                <span className="text-[10px] px-2 py-0.5 rounded-full bg-[#9b87f5]/10 text-[#9b87f5] border border-[#9b87f5]/20">STT</span>
+                                <span className="text-[10px] px-2 py-0.5 rounded-full bg-[#9b87f5]/10 text-[#9b87f5] border border-[#9b87f5]/20">MON</span>
                             </div>
                             <div className="text-3xl font-bold text-[#9b87f5]">
                                 {formatCompactCurrency(platformStats.totalVolume)}

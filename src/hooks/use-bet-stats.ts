@@ -1,5 +1,5 @@
 import { useEffect, useState } from 'react';
-import { supabase } from '@/lib/supabase';
+import { getActivities } from '@/lib/mock/activity';
 
 interface BetStats {
   totalBets: number;
@@ -14,40 +14,12 @@ export function useBetStats() {
     const fetchBetStats = async () => {
       try {
         setIsLoading(true);
-        console.log('📊 Fetching bet statistics from Supabase...');
-
-        // Get total bet count
-        const { count: totalBets, error: countError } = await supabase
-          .from('bet_activities')
-          .select('*', { count: 'exact', head: true });
-
-        if (countError) {
-          console.error('Failed to fetch bet count:', countError);
-          return;
-        }
-
-        // Get unique traders
-        const { data: uniqueUsers, error: usersError } = await supabase
-          .from('bet_activities')
-          .select('user_address');
-
-        if (usersError) {
-          console.error('Failed to fetch unique traders:', usersError);
-          return;
-        }
-
-        // Calculate unique traders
+        const activities = await getActivities();
+        const totalBets = activities.length;
         const uniqueTraders = new Set(
-          uniqueUsers?.map(bet => bet.user_address.toLowerCase()) || []
+          activities.map(a => a.user_address?.toLowerCase()).filter(Boolean)
         ).size;
-
-        const betStats = {
-          totalBets: totalBets || 0,
-          uniqueTraders,
-        };
-
-        console.log('✅ Bet statistics from Supabase:', betStats);
-        setStats(betStats);
+        setStats({ totalBets, uniqueTraders });
       } catch (error) {
         console.error('❌ Failed to fetch bet stats:', error);
       } finally {

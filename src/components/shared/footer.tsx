@@ -1,6 +1,7 @@
-﻿"use client";
+"use client";
 import { usePathname } from "next/navigation";
 import Link from "next/link";
+import Image from "next/image";
 
 type FooterLink = {
   label: string;
@@ -19,15 +20,7 @@ const footerSections: FooterSection[] = [
         { label: "How it Works", href: "/" },
         { label: "Markets", href: "/markets" },
       ],
-    },
-    {
-      title: "Terms of Use",
-      links: [
-        { label: "Privacy Policy", href: "/privacy-policy" },
-        { label: "Terms & Condition", href: "/terms" },
-        { label: "Learn", href: "/learn" },
-      ],
-    },
+    }
   ];
 
 const socials: FooterLink[] = [];
@@ -41,10 +34,7 @@ export const Footer = () => {
     <footer className="text-white w-full px-4 sm:px-8 lg:px-16 py-8 mt-8">
       <div className="max-w-7xl mx-auto flex flex-col items-center gap-4">
         <Link href="/" className="flex items-center gap-2">
-          <span className="text-lg sm:text-xl font-bold tracking-tight">
-            <span className="bg-gradient-to-r from-[#a78bfa] via-[#9b87f5] to-[#7c3aed] bg-clip-text text-transparent">Somnia</span>
-            <span className="text-white">Predict</span>
-          </span>
+          <span className="text-lg sm:text-xl font-bold tracking-tight text-white">PlotPredict</span>
         </Link>
 
         <nav className="flex flex-wrap justify-center gap-x-5 gap-y-2 text-xs sm:text-sm text-gray-400">

@@ -1,10 +1,8 @@
-﻿import { ErrorBoundary } from "@/components/shared/error-bounday";
+import { ErrorBoundary } from "@/components/shared/error-bounday";
 import { headers } from "next/headers";
 import { Header } from "@/components/shared/header";
 import { TermsGuard } from "@/components/shared/terms-guard";
 import { Web3Provider } from "@/providers/web3-provider";
-import { SomniaStreamsProvider } from "@/providers/somnia-streams-provider";
-import { LiveNotificationsWrapper } from "@/components/shared/live-notifications-wrapper";
 import { Bricolage_Grotesque } from "next/font/google";
 import "./globals.css";
 import { Toaster } from "@/components/ui/sonner";
@@ -15,24 +13,24 @@ const bricolage = Bricolage_Grotesque({ subsets: ["latin"] });
 // Global Metadata
 export const metadata = {
   title: {
-    default: "SomniaPredict – Decentralized Prediction Markets",
-    template: "%s | SomniaPredict",
+    default: "PlotPredict – Episode Prediction Markets",
+    template: "%s | PlotPredict",
   },
   description:
-    "Trade, predict, and win on SomniaPredict. On-chain, transparent prediction markets on Somnia testnet.",
+    "Predict the next episode's plot. Create and trade on episode outcome markets.",
   metadataBase: new URL(process.env.NEXT_PUBLIC_APP_URL || "http://localhost:3000"),
   openGraph: {
-    title: "SomniaPredict – Decentralized Prediction Markets",
+    title: "PlotPredict – Episode Prediction Markets",
     description:
-      "Trade, predict, and win on SomniaPredict. On-chain, transparent, and community-driven.",
+      "Predict the next episode's plot with community-driven markets.",
     url: process.env.NEXT_PUBLIC_APP_URL || "http://localhost:3000",
-    siteName: "SomniaPredict",
+    siteName: "PlotPredict",
     images: [
       {
         url: "/favicon.ico",
         width: 1200,
         height: 630,
-        alt: "Somnia Predict",
+        alt: "PlotPredict",
       },
     ],
     locale: "en_US",
@@ -40,10 +38,10 @@ export const metadata = {
   },
   twitter: {
     card: "summary_large_image",
-    title: "SomniaPredict – Decentralized Prediction Markets",
+    title: "PlotPredict – Episode Prediction Markets",
     description:
-      "Trade, predict, and win on SomniaPredict. On-chain, transparent, and community-driven.",
-    creator: "@somniapredict",
+      "Predict the next episode's plot with community-driven markets.",
+    creator: "@plotpredict",
     images: [],
   },
   icons: undefined,
@@ -72,17 +70,14 @@ export default async function RootLayout({
       >
         <ErrorBoundary>
           <Web3Provider>
-            <SomniaStreamsProvider>
-              <LiveNotificationsWrapper />
-              <div className="min-h-screen flex flex-col bg-gradient-to-r from-[#0A0C14] via-[#1A1F2C] to-[#0A0C14] text-white relative">
-                <TermsGuard>
-                  <Header />
-                  <main className="flex-1">{children}</main>
-                  {pathname === "/" && <Footer />}
-                </TermsGuard>
-              </div>
-              <Toaster theme="dark" position="top-right" />
-            </SomniaStreamsProvider>
+            <div className="min-h-screen flex flex-col bg-gradient-to-r from-[#0A0C14] via-[#1A1F2C] to-[#0A0C14] text-white relative">
+              <TermsGuard>
+                <Header />
+                <main className="flex-1">{children}</main>
+                {pathname === "/" && <Footer />}
+              </TermsGuard>
+            </div>
+            <Toaster theme="dark" position="top-right" />
           </Web3Provider>
         </ErrorBoundary>
       </body>

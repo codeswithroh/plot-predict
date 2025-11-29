@@ -1,5 +1,6 @@
-﻿import { useState, useEffect } from 'react'
-import { supabase, Comment } from '@/lib/supabase'
+import { useState, useEffect } from 'react'
+import type { Comment } from '@/lib/supabase'
+import { listComments, addComment as mockAddComment, deleteComment as mockDeleteComment } from '@/lib/mock/comments'
 import { toast } from 'sonner'
 
 export const useComments = (marketId: string) => {
@@ -12,18 +13,8 @@ export const useComments = (marketId: string) => {
     try {
       setIsLoading(true)
       setError(null)
-
-      const { data, error } = await supabase
-        .from('comments')
-        .select('*')
-        .eq('market_id', marketId)
-        .order('created_at', { ascending: true })
-
-      if (error) {
-        throw error
-      }
-
-      setComments(data || [])
+      const data = await listComments(marketId)
+      setComments((data as any) || [])
     } catch (err: any) {
       console.error('Error fetching comments:', err)
       setError(err.message)
@@ -35,24 +26,10 @@ export const useComments = (marketId: string) => {
   // Add new comment
   const addComment = async (content: string, userAddress: string) => {
     try {
-      const { data, error } = await supabase
-        .from('comments')
-        .insert([{
-          market_id: marketId,
-          user_address: userAddress,
-          content: content.trim()
-        }])
-        .select()
-        .single()
-
-      if (error) {
-        throw error
-      }
-
-      // Add to local state
-      setComments(prev => [...prev, data])
+      const data = await mockAddComment(marketId, content, userAddress)
+      setComments(prev => [...prev, data as any])
       toast.success('Comment added successfully!')
-      return data
+      return data as any
     } catch (err: any) {
       console.error('Error adding comment:', err)
       toast.error('Failed to add comment')
@@ -63,18 +40,10 @@ export const useComments = (marketId: string) => {
   // Delete comment (only by author)
   const deleteComment = async (commentId: string, userAddress: string) => {
     try {
-      const { error } = await supabase
-        .from('comments')
-        .delete()
-        .eq('id', commentId)
-        .eq('user_address', userAddress)
-
-      if (error) {
-        throw error
+      const ok = await mockDeleteComment(commentId, userAddress)
+      if (ok) {
+        setComments(prev => prev.filter(c => c.id !== commentId))
       }
-
-      // Remove from local state
-      setComments(prev => prev.filter(c => c.id !== commentId))
       toast.success('Comment deleted successfully!')
     } catch (err: any) {
       console.error('Error deleting comment:', err)

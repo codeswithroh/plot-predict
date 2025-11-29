@@ -1,4 +1,4 @@
-﻿"use client";
+"use client";
 
 import { MarketCard } from "@/components/market/market-card";
 import { MarketError } from "@/components/market/market-error";
@@ -78,7 +78,7 @@ export default function MarketsPage() {
                 </span>
               </div>
               <p className="text-gray-400 text-lg">
-                Trade on the outcomes of real-world events with STT tokens
+                Trade on the outcomes of real-world events with MON tokens
               </p>
             </div>
 
@@ -112,7 +112,7 @@ export default function MarketsPage() {
                 </span>
               </div>
               <p className="text-3xl font-bold text-white">
-                {markets.reduce((sum, m) => sum + parseFloat(m.totalPool || "0"), 0).toFixed(2)} STT
+                {markets.reduce((sum, m) => sum + parseFloat(m.totalPool || "0"), 0).toFixed(2)} MON
               </p>
               <p className="text-xs text-gray-500 mt-1">
                 All-time trading volume

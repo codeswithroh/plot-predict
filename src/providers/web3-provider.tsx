@@ -1,27 +1,19 @@
-﻿"use client";
+"use client";
 import "@rainbow-me/rainbowkit/styles.css";
 import React from "react";
 import { WagmiProvider, http } from "wagmi";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { RainbowKitProvider, getDefaultConfig, darkTheme } from "@rainbow-me/rainbowkit";
-import { somniaTestnet } from "@/config/somnia";
+import { sepolia } from "wagmi/chains";
 
 const queryClient = new QueryClient();
 
-// Add safety check for somniaTestnet
-if (!somniaTestnet) {
-  console.error("somniaTestnet is undefined");
-  throw new Error("somniaTestnet configuration is missing");
-}
-
-console.log("somniaTestnet config:", somniaTestnet);
-
 const wagmiConfig = getDefaultConfig({
-  appName: "Somnia Predict",
+  appName: "PlotPredict",
   projectId: process.env.NEXT_PUBLIC_WALLETCONNECT_PROJECT_ID || "demo",
-  chains: [somniaTestnet as any],
+  chains: [sepolia],
   transports: {
-    [somniaTestnet.id]: http(somniaTestnet.rpcUrls.default.http[0]),
+    [sepolia.id]: http(),
   },
   ssr: true,
 }) as any;

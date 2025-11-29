@@ -60,7 +60,7 @@ export const LiveStats: React.FC<LiveStatsProps> = ({
       {/* Volume */}
       <div className="flex items-center space-x-2 text-gray-400">
         <DollarSign className="h-4 w-4" />
-        <span className="text-sm font-medium">{volume.toFixed(2)} STT</span>
+        <span className="text-sm font-medium">{volume.toFixed(2)} MON</span>
       </div>
     </div>
   );

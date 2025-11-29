@@ -121,7 +121,7 @@ export const LiveActivityFeed: React.FC<LiveActivityFeedProps> = ({
                           </div>
                           <div className="flex items-center gap-1">
                             <span className="text-gray-400">Amount:</span>
-                            <span className="text-[#9b87f5] font-semibold">{amount} STT</span>
+                            <span className="text-[#9b87f5] font-semibold">{amount} MON</span>
                             <span className="text-gray-400">on</span>
                             <span className="text-white font-medium">{outcome}</span>
                           </div>

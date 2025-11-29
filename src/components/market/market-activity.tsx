@@ -1,4 +1,4 @@
-﻿import React from 'react';
+import React from 'react';
 import { useBetActivity } from '@/hooks/use-bet-activity';
 import { Badge } from '@/components/ui/badge';
 import { Card, CardContent } from '@/components/ui/card';
@@ -98,7 +98,7 @@ export const MarketActivity: React.FC<MarketActivityProps> = ({
                       </span>
                       <span className="text-gray-400 text-sm">bet</span>
                       <span className="text-[#9b87f5] font-bold">
-                        {activity.amount} STT
+                        {activity.amount} MON
                       </span>
                       <span className="text-gray-400 text-sm">on</span>
                       <Badge className={`text-xs ${activity.option === 0

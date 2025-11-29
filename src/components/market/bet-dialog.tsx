@@ -1,4 +1,4 @@
-﻿import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect } from 'react';
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from '@/components/ui/dialog';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
@@ -106,12 +106,12 @@ export const BetDialog: React.FC<BetDialogProps> = ({
       const maxBetNum = parseFloat(market.maxBet);
       
       if (betAmountNum < minBetNum) {
-        toast.error(`Minimum bet amount is ${minBetNum} STT`);
+        toast.error(`Minimum bet amount is ${minBetNum} MON`);
         return;
       }
       
       if (betAmountNum > maxBetNum) {
-        toast.error(`Maximum bet amount is ${maxBetNum} STT`);
+        toast.error(`Maximum bet amount is ${maxBetNum} MON`);
         return;
       }
     }
@@ -130,7 +130,7 @@ export const BetDialog: React.FC<BetDialogProps> = ({
       setSuccessData({
         amount: betAmount,
         option: selectedOption,
-        txHash: result || 'pending',
+        txHash: 'pending',
         shares: betAmount // 1:1 ratio for now, could be calculated differently
       });
       
@@ -164,14 +164,14 @@ export const BetDialog: React.FC<BetDialogProps> = ({
     if (betAmountNum < minBetNum) {
       return { 
         isValid: false, 
-        error: `Minimum bet: ${minBetNum} STT` 
+        error: `Minimum bet: ${minBetNum} MON` 
       };
     }
     
     if (betAmountNum > maxBetNum) {
       return { 
         isValid: false, 
-        error: `Maximum bet: ${maxBetNum} STT` 
+        error: `Maximum bet: ${maxBetNum} MON` 
       };
     }
     
@@ -213,7 +213,7 @@ export const BetDialog: React.FC<BetDialogProps> = ({
           <form onSubmit={handleSubmit} className="space-y-4">
             <div className="space-y-2">
               <Label htmlFor="betAmount" className="text-sm font-medium text-gray-300">
-                Bet Amount (STT)
+                Bet Amount (MON)
               </Label>
               <div className="relative">
                 <Input
@@ -231,21 +231,21 @@ export const BetDialog: React.FC<BetDialogProps> = ({
                   disabled={isSubmitting || isLoading}
                 />
                 <div className="absolute right-3 top-1/2 transform -translate-y-1/2 text-sm text-gray-400">
-                  STT
+                  MON
                 </div>
               </div>
               
               {/* Balance Info */}
               <div className="flex justify-between text-xs text-gray-400">
                 <span>Available Balance:</span>
-                <span>{formatBalance(balance?.value)} STT</span>
+                <span>{formatBalance(balance?.value)} MON</span>
               </div>
               
               {/* Min/Max Info */}
               {market && (
                 <div className="flex justify-between text-xs text-gray-400">
                   <span>Bet Range:</span>
-                  <span>{market.minBet} - {market.maxBet} STT</span>
+                  <span>{market.minBet} - {market.maxBet} MON</span>
                 </div>
               )}
               
@@ -343,7 +343,7 @@ export const BetDialog: React.FC<BetDialogProps> = ({
                     </span>
                   </div>
                 ) : (
-                  `Place Bet (${betAmount || '0'} STT)`
+                  `Place Bet (${betAmount || '0'} MON)`
                 )}
               </Button>
             </div>
@@ -424,7 +424,7 @@ export const BetDialog: React.FC<BetDialogProps> = ({
                 
                 <div className="flex justify-between items-center">
                   <span className="text-gray-400 text-sm">Bet Amount:</span>
-                  <span className="text-white font-bold">{successData.amount} STT</span>
+                  <span className="text-white font-bold">{successData.amount} MON</span>
                 </div>
                 
                 <div className="flex justify-between items-center">

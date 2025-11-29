@@ -3,8 +3,10 @@
 import Link from "next/link";
 import { WalletButton } from "./wallet-button";
 import Image from "next/image";
+import { useContractOwner } from "@/hooks/use-contract-owner";
 
 export function Header() {
+  const { isOwner } = useContractOwner();
   return (
     <header className="sticky top-0 z-50 w-full p-6">
       <div className="max-w-7xl mx-auto">
@@ -31,6 +33,14 @@ export function Header() {
               >
                 My Bets
               </Link>
+              {isOwner && (
+                <Link 
+                  href="/dashboard/create" 
+                  className="text-gray-300 hover:text-white transition-colors text-sm font-medium"
+                >
+                  Create Market
+                </Link>
+              )}
             </nav>
             
             {/* Wallet Button */}

@@ -255,7 +255,16 @@ export const usePredictionContractRead = () => {
 
   return {
     allMarkets: infos ? (infos as any[]).map((x, i) => x?.result ? transformContractMarket((x as any).result[0] ?? (x as any).result, addresses[i]) : null).filter(Boolean) as Market[] : [],
-    activeMarkets: infos ? (infos as any[]).map((x, i) => x?.result ? transformContractMarket((x as any).result[0] ?? (x as any).result, addresses[i]) : null).filter((m: any) => m && !m.resolved) as Market[] : [],
+    activeMarkets: infos
+      ? (infos as any[])
+          .map((x, i) => (x?.result ? transformContractMarket((x as any).result[0] ?? (x as any).result, addresses[i]) : null))
+          .filter((m: any) => {
+            if (!m) return false;
+            const now = Math.floor(Date.now() / 1000);
+            const end = Number(m.endTime || 0);
+            return !m.resolved && end > now;
+          }) as Market[]
+      : [],
     allMarketsLoading: allMarketsLoading || infosLoading,
     activeMarketsLoading: allMarketsLoading || infosLoading,
     refetchAllMarkets: async () => { await refetchAllMarkets(); await refetchInfos(); },

@@ -7,7 +7,7 @@ import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import { usePredictionContractRead } from "@/hooks/use-prediction-contract";
+import { usePredictionContract, usePredictionContractRead } from "@/hooks/use-prediction-contract";
 import { useBetStats } from "@/hooks/use-bet-stats";
 import { Market } from "@/types/market";
 import {
@@ -18,6 +18,8 @@ import {
   Users
 } from "lucide-react";
 import { useEffect, useState } from "react";
+import { useContractOwner } from "@/hooks/use-contract-owner";
+import { toast } from "sonner";
 
 export default function MarketsPage() {
   const [searchQuery, setSearchQuery] = useState("");
@@ -26,6 +28,8 @@ export default function MarketsPage() {
   // Use contract hooks for real data
   const { activeMarkets, allMarkets, activeMarketsLoading, allMarketsLoading, refetchActiveMarkets, refetchAllMarkets } = usePredictionContractRead();
   const { stats: betStats, isLoading: betStatsLoading } = useBetStats();
+  const { createMarket, isLoading: isCreating } = usePredictionContract();
+  const { isOwner } = useContractOwner();
 
   const loading = activeMarketsLoading || allMarketsLoading;
   const error = null;
@@ -47,6 +51,27 @@ export default function MarketsPage() {
     market.title.toLowerCase().includes(searchQuery.toLowerCase()) ||
     market.description.toLowerCase().includes(searchQuery.toLowerCase())
   );
+
+  const handleCreateDemo = async () => {
+    try {
+      const endTimestamp = Math.floor(Date.now() / 1000) + 2 * 60 * 60;
+      await createMarket({
+        title: "Demo: Will this demo market resolve to YES?",
+        description: "Demo market for showcasing voting flow.",
+        optionA: "YES",
+        optionB: "NO",
+        category: 3,
+        endTime: endTimestamp,
+        minBet: "0.01",
+        maxBet: "100",
+        imageUrl: "",
+      });
+      toast.success("Demo market created");
+      await refetchAllMarkets();
+      await refetchActiveMarkets();
+      setActiveTab("active");
+    } catch (e: any) {}
+  };
 
   // Loading state
   if (loading) {
@@ -82,7 +107,13 @@ export default function MarketsPage() {
               </p>
             </div>
 
-            {/* Create market button removed - admin only access */}
+            {isOwner && (
+              <div className="flex items-center gap-3">
+                <Button onClick={handleCreateDemo} disabled={isCreating} className="bg-[#9b87f5] hover:bg-[#7c3aed] text-white">
+                  {isCreating ? "Creating..." : "Create Demo Market"}
+                </Button>
+              </div>
+            )}
           </div>
 
           {/* Platform Statistics */}

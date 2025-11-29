@@ -1,5 +1,13 @@
 require("@nomiclabs/hardhat-ethers");
+// Load .env first, then override with .env.local if present
 require("dotenv").config();
+require("dotenv").config({ path: ".env.local", override: true });
+
+const MONAD_URL = process.env.NEXT_PUBLIC_RPC_URL || "";
+const RAW_ADMIN_KEY = process.env.NEXT_PUBLIC_ADMIN_KEY || "";
+const ADMIN_KEY = RAW_ADMIN_KEY
+  ? (RAW_ADMIN_KEY.startsWith("0x") ? RAW_ADMIN_KEY : `0x${RAW_ADMIN_KEY}`)
+  : undefined;
 
 /** @type import('hardhat/config').HardhatUserConfig */
 module.exports = {
@@ -21,9 +29,8 @@ module.exports = {
       gasLimit: 4500934,
     },
     monad_testnet: {
-      url: process.env.NEXT_PUBLIC_RPC_URL || "",
-      chainId: process.env.NEXT_PUBLIC_MONAD_CHAIN_ID ? Number(process.env.NEXT_PUBLIC_MONAD_CHAIN_ID) : undefined,
-      accounts: process.env.NEXT_PUBLIC_ADMIN_KEY ? [process.env.NEXT_PUBLIC_ADMIN_KEY] : [],
+      url: MONAD_URL,
+      accounts: ADMIN_KEY ? [ADMIN_KEY] : [],
     },
   },
 };

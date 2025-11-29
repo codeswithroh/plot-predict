@@ -1,4 +1,4 @@
-﻿import { Badge } from "@/components/ui/badge";
+import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
 import { Progress } from "@/components/ui/progress";
@@ -168,7 +168,7 @@ export const MarketCard: React.FC<MarketCardProps> = ({
             <div className="grid grid-cols-2 gap-4 pt-2 border-t border-gray-800/50">
               <div className="flex items-center space-x-2 text-xs text-gray-400">
                 <DollarSign className="h-3 w-3 text-purple-400" />
-                <span>{formatCurrency(market.totalPool)} STT</span>
+                <span>{formatCurrency(market.totalPool)} MON</span>
               </div>
               <div className="flex items-center space-x-2 text-xs text-gray-400">
                 <Clock className="h-3 w-3 text-yellow-400" />

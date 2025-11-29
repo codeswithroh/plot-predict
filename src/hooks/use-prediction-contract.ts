@@ -1,6 +1,6 @@
-﻿import { useWriteContract, useReadContract, useWaitForTransactionReceipt } from 'wagmi';
-import { parseEther, formatEther } from 'viem';
-import { PREDICTION_MARKET_ABI, PREDICTION_MARKET_ADDRESS } from '@/lib/contracts/prediction-market';
+import { useWriteContract, useReadContract, useReadContracts, useWaitForTransactionReceipt } from 'wagmi';
+import { parseEther, formatEther, type Address } from 'viem';
+import { MARKET_FACTORY_ABI, MARKET_ABI, FACTORY_ADDRESS } from '@/lib/contracts/plotpredict';
 import { Market } from '@/types/market';
 import { useState } from 'react';
 import { toast } from 'sonner';
@@ -18,12 +18,23 @@ export const usePredictionContract = () => {
     try {
       setIsLoading(true);
       console.log('🎯 Placing bet:', { marketId, option, amount });
-      
+      // Resolve market address by id via factory
+      const marketAddress = await (async () => {
+        const res = await (window as any).wagmi?.config?.getClient?.()?.readContract?.({
+          address: FACTORY_ADDRESS,
+          abi: MARKET_FACTORY_ABI,
+          functionName: 'marketById',
+          args: [BigInt(marketId)],
+        });
+        return res as Address;
+      })();
+
+      const fn = option === 0 ? 'placeYes' : 'placeNo';
       const result = await writeContract({
-        address: PREDICTION_MARKET_ADDRESS,
-        abi: PREDICTION_MARKET_ABI,
-        functionName: 'placeBet',
-        args: [BigInt(marketId), option],
+        address: marketAddress,
+        abi: MARKET_ABI,
+        functionName: fn,
+        args: [],
         value: parseEther(amount),
       });
       
@@ -43,12 +54,21 @@ export const usePredictionContract = () => {
     try {
       setIsLoading(true);
       console.log('⚖️ Resolving market:', { marketId, outcome });
-      
+      const marketAddress = await (async () => {
+        const res = await (window as any).wagmi?.config?.getClient?.()?.readContract?.({
+          address: FACTORY_ADDRESS,
+          abi: MARKET_FACTORY_ABI,
+          functionName: 'marketById',
+          args: [BigInt(marketId)],
+        });
+        return res as Address;
+      })();
+      const fn = outcome === 0 ? 'resolveYes' : 'resolveNo';
       const result = await writeContract({
-        address: PREDICTION_MARKET_ADDRESS,
-        abi: PREDICTION_MARKET_ABI,
-        functionName: 'resolveMarket',
-        args: [BigInt(marketId), outcome],
+        address: marketAddress,
+        abi: MARKET_ABI,
+        functionName: fn,
+        args: [],
       });
       
       toast.success('Market resolution submitted!');
@@ -77,21 +97,15 @@ export const usePredictionContract = () => {
     try {
       setIsLoading(true);
       console.log('🏗️ Creating market:', marketData);
-      
+      // Map to factory.createMarket(question,imageUrl,lockTime)
       const result = await writeContract({
-        address: PREDICTION_MARKET_ADDRESS,
-        abi: PREDICTION_MARKET_ABI,
+        address: FACTORY_ADDRESS,
+        abi: MARKET_FACTORY_ABI,
         functionName: 'createMarket',
         args: [
           marketData.title,
-          marketData.description,
-          marketData.optionA,
-          marketData.optionB,
-          marketData.category,
-          BigInt(marketData.endTime),
-          parseEther(marketData.minBet),
-          parseEther(marketData.maxBet),
           marketData.imageUrl,
+          BigInt(marketData.endTime),
         ],
       });
       
@@ -111,12 +125,20 @@ export const usePredictionContract = () => {
     try {
       setIsLoading(true);
       console.log('💰 Claiming winnings for market:', marketId);
-      
+      const marketAddress = await (async () => {
+        const res = await (window as any).wagmi?.config?.getClient?.()?.readContract?.({
+          address: FACTORY_ADDRESS,
+          abi: MARKET_FACTORY_ABI,
+          functionName: 'marketById',
+          args: [BigInt(marketId)],
+        });
+        return res as Address;
+      })();
       const result = await writeContract({
-        address: PREDICTION_MARKET_ADDRESS,
-        abi: PREDICTION_MARKET_ABI,
-        functionName: 'claimWinnings',
-        args: [BigInt(marketId)],
+        address: marketAddress,
+        abi: MARKET_ABI,
+        functionName: 'claim',
+        args: [],
       });
       
       toast.success('Winnings claimed successfully!');
@@ -144,65 +166,74 @@ export const usePredictionContract = () => {
 
 // Hook to read contract data
 export const usePredictionContractRead = () => {
-  // Get all markets
-  const { data: allMarkets, isLoading: allMarketsLoading, refetch: refetchAllMarkets } = useReadContract({
-    address: PREDICTION_MARKET_ADDRESS,
-    abi: PREDICTION_MARKET_ABI,
-    functionName: 'getAllMarkets',
+  // Get all market addresses
+  const { data: marketAddresses, isLoading: allMarketsLoading, refetch: refetchAllMarkets } = useReadContract({
+    address: FACTORY_ADDRESS,
+    abi: MARKET_FACTORY_ABI,
+    functionName: 'markets',
   });
 
-  // Get active markets
-  const { data: activeMarkets, isLoading: activeMarketsLoading, refetch: refetchActiveMarkets } = useReadContract({
-    address: PREDICTION_MARKET_ADDRESS,
-    abi: PREDICTION_MARKET_ABI,
-    functionName: 'getActiveMarkets',
+  // Batch read getInfo from each market
+  const addresses = (marketAddresses as Address[] | undefined) || [];
+  const contracts = addresses.map((addr) => ({ address: addr, abi: MARKET_ABI, functionName: 'getInfo' as const }));
+  const { data: infos, isLoading: infosLoading, refetch: refetchInfos } = useReadContracts({
+    contracts,
+    allowFailure: true,
   });
 
   // Transform contract data to Market type
-  const transformContractMarket = (contractMarket: any): Market => {
-    const totalPool = formatEther(contractMarket.totalPool);
+  const transformContractMarket = (contractMarket: any, address?: Address): Market => {
+    const totalPool = formatEther(contractMarket._totalPool ?? contractMarket.totalPool);
     console.log('🔍 Transform Market:', {
-      id: contractMarket.id.toString(),
-      title: contractMarket.title,
-      totalPoolRaw: contractMarket.totalPool.toString(),
+      id: (contractMarket._id ?? contractMarket.id).toString(),
+      title: contractMarket._question ?? contractMarket.title,
+      totalPoolRaw: (contractMarket._totalPool ?? contractMarket.totalPool).toString(),
       totalPoolFormatted: totalPool,
-      totalOptionAShares: formatEther(contractMarket.totalOptionAShares),
-      totalOptionBShares: formatEther(contractMarket.totalOptionBShares),
+      totalOptionAShares: formatEther(contractMarket._totalYes ?? contractMarket.totalOptionAShares ?? BigInt(0)),
+      totalOptionBShares: formatEther(contractMarket._totalNo ?? contractMarket.totalOptionBShares ?? BigInt(0)),
     });
     
     return {
-      id: contractMarket.id.toString(),
-      title: contractMarket.title,
-      description: contractMarket.description,
-      category: Number(contractMarket.category),
-      optionA: contractMarket.optionA,
-      optionB: contractMarket.optionB,
-      creator: contractMarket.creator,
-      createdAt: contractMarket.createdAt.toString(),
-      endTime: contractMarket.endTime.toString(),
-      minBet: formatEther(contractMarket.minBet),
-      maxBet: formatEther(contractMarket.maxBet),
-      status: Number(contractMarket.status),
-      outcome: contractMarket.resolved ? Number(contractMarket.outcome) : null,
-      resolved: contractMarket.resolved,
-      totalOptionAShares: formatEther(contractMarket.totalOptionAShares),
-      totalOptionBShares: formatEther(contractMarket.totalOptionBShares),
+      id: (contractMarket._id ?? contractMarket.id).toString(),
+      title: contractMarket._question ?? contractMarket.title,
+      description: '',
+      category: 3,
+      optionA: 'YES',
+      optionB: 'NO',
+      creator: address || '0x0000000000000000000000000000000000000000',
+      createdAt: '0',
+      endTime: (contractMarket._lockTime ?? contractMarket.endTime)?.toString?.() ?? '0',
+      minBet: '0',
+      maxBet: '0',
+      status: (contractMarket._resolved ?? contractMarket.resolved) ? 2 : 0,
+      outcome: (contractMarket._resolved ?? contractMarket.resolved)
+        ? Number(contractMarket._outcome ?? contractMarket.outcome)
+        : null,
+      resolved: Boolean(contractMarket._resolved ?? contractMarket.resolved),
+      totalOptionAShares: formatEther(contractMarket._totalYes ?? BigInt(0)),
+      totalOptionBShares: formatEther(contractMarket._totalNo ?? BigInt(0)),
       totalPool: totalPool,
-      imageURI: contractMarket.imageUrl,
+      imageURI: contractMarket._imageUrl ?? contractMarket.imageUrl,
     };
   };
 
-  // Get single market
+  // Get single market by id via factory.marketById(id) then market.getInfo()
   const getMarket = (marketId: string) => {
-    const { data: marketData, isLoading, refetch } = useReadContract({
-      address: PREDICTION_MARKET_ADDRESS,
-      abi: PREDICTION_MARKET_ABI,
-      functionName: 'getMarket',
+    const { data: marketAddress } = useReadContract({
+      address: FACTORY_ADDRESS,
+      abi: MARKET_FACTORY_ABI,
+      functionName: 'marketById',
       args: [BigInt(marketId)],
+    });
+    const { data: info, isLoading, refetch } = useReadContract({
+      address: (marketAddress as Address) || undefined,
+      abi: MARKET_ABI,
+      functionName: 'getInfo',
+      query: { enabled: Boolean(marketAddress) },
     });
 
     return {
-      market: marketData ? transformContractMarket(marketData) : null,
+      market: info ? transformContractMarket((info as any)[0] ?? info, marketAddress as Address) : null,
       isLoading,
       refetch,
     };
@@ -210,34 +241,25 @@ export const usePredictionContractRead = () => {
 
   // Get user position
   const getUserPosition = (userAddress: string, marketId: string) => {
-    const { data: positionData, isLoading, refetch } = useReadContract({
-      address: PREDICTION_MARKET_ADDRESS,
-      abi: PREDICTION_MARKET_ABI,
-      functionName: 'getUserPosition',
-      args: [userAddress as `0x${string}`, BigInt(marketId)],
-    });
+    // Position is derived from ERC1155 balances; for now, leave zeroes (can be enhanced)
+    const positionData = null as any;
+    const isLoading = false;
+    const refetch = async () => {};
 
     return {
-      position: positionData ? {
-        optionAShares: formatEther(positionData.optionAShares),
-        optionBShares: formatEther(positionData.optionBShares),
-        totalInvested: formatEther(positionData.totalInvested),
-        marketId: Number(marketId),
-        currentValue: '0', // Calculate based on current market state
-        profitLoss: '0', // Calculate based on current market state
-      } : null,
+      position: null,
       isLoading,
       refetch,
     };
   };
 
   return {
-    allMarkets: allMarkets ? (allMarkets as any[]).map(transformContractMarket) : [],
-    activeMarkets: activeMarkets ? (activeMarkets as any[]).map(transformContractMarket) : [],
-    allMarketsLoading,
-    activeMarketsLoading,
-    refetchAllMarkets,
-    refetchActiveMarkets,
+    allMarkets: infos ? (infos as any[]).map((x, i) => x?.result ? transformContractMarket((x as any).result[0] ?? (x as any).result, addresses[i]) : null).filter(Boolean) as Market[] : [],
+    activeMarkets: infos ? (infos as any[]).map((x, i) => x?.result ? transformContractMarket((x as any).result[0] ?? (x as any).result, addresses[i]) : null).filter((m: any) => m && !m.resolved) as Market[] : [],
+    allMarketsLoading: allMarketsLoading || infosLoading,
+    activeMarketsLoading: allMarketsLoading || infosLoading,
+    refetchAllMarkets: async () => { await refetchAllMarkets(); await refetchInfos(); },
+    refetchActiveMarkets: async () => { await refetchAllMarkets(); await refetchInfos(); },
     getMarket,
     getUserPosition,
   };

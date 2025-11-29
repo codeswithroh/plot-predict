@@ -23,6 +23,15 @@ A minimal, modular prediction market for web‑series plot outcomes, deployed on
 - **Native token**: MON
 - Provide your RPC/Explorer when deploying.
 
+## 📜 Deployed Contracts (Monad testnet)
+
+- **MarketFactory**: [`0xD07f07f038c202F8DEbc4345626466ef4AC93b99`](https://monad-testnet.blockscout.com/address/0xD07f07f038c202F8DEbc4345626466ef4AC93b99)
+- SocialScan: https://monad-testnet.socialscan.io/address/0xd07f07f038c202f8debc4345626466ef4ac93b99
+- **PositionToken (ERC1155)**: [`0xd6a57c511dcE9213c9320d1DCEc35674db783e86`](https://monad-testnet.blockscout.com/address/0xd6a57c511dcE9213c9320d1DCEc35674db783e86)
+- SocialScan: https://monad-testnet.socialscan.io/address/0xd6a57c511dce9213c9320d1dcec35674db783e86
+
+If your preferred devscanner uses a different base URL, replace the domain accordingly.
+
 ## 🚀 Quick Start
 
 ### Prerequisites
